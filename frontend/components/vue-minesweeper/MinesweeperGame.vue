@@ -6,6 +6,7 @@
       </div>
       <a href="#" @click.prevent="initGrid"> &#9786; </a>
       <minesweeper-timer
+        ref="timer"
         class="minesweeper-timer"
         :finished="finished"
       ></minesweeper-timer>
@@ -82,6 +83,7 @@ export default {
     return {
       bombCount: 0,
       finished: false,
+      started: false,
       won: false,
       grid: [],
       dialog: false,
@@ -302,6 +304,10 @@ export default {
     openImage(cell, i) {
       this.dialog = true
       this.openTargetCell = cell
+      if (!this.started) {
+        this.$refs.timer.initTimer()
+        this.started = true
+      }
     },
     openCell() {
       this.clickCell(this.openTargetCell, 0)
