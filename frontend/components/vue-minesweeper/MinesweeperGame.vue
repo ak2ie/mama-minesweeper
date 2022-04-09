@@ -26,7 +26,7 @@
 
     <v-dialog v-model="dialog" width="500">
       <v-card>
-        <v-card-title class="text-h5 grey lighten-2">
+        <v-card-title v-show="!finished" class="text-h5 grey lighten-2">
           これは地雷？
         </v-card-title>
 
@@ -42,7 +42,12 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="openCell()">地雷ではない</v-btn>
+          <v-btn v-if="!finished" color="primary" text @click="openCell()"
+            >地雷ではない</v-btn
+          >
+          <v-btn v-else color="primary" text @click="dialog = false"
+            >閉じる</v-btn
+          >
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -158,13 +163,25 @@ export default {
       if (this.finished) {
         return
       }
-      if (this.bombCount !== 0) {
-        return
-      }
       const remainingGrid = this.grid.find((g) => !g.isOpen && !g.hasFlag)
       if (!remainingGrid) {
         this.finished = true
         this.won = true
+      } else {
+        // 開けてない かつ 旗も立てていないマスがある場合
+        const remainingBlankGrid = this.grid.find(
+          (g) => !g.isOpen && !g.hasBomb
+        )
+        if (!remainingBlankGrid) {
+          // 開けていないマスがすべて地雷の場合
+          this.grid.forEach((checkCell) => {
+            if (checkCell.hasBomb) {
+              checkCell.isOpen = true
+            }
+          })
+          this.finished = true
+          this.won = true
+        }
       }
     },
     addFlag(cell) {
