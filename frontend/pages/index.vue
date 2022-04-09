@@ -1,7 +1,7 @@
 <template>
   <v-row justify="center" align="center">
     <v-col cols="12" sm="8" md="6">
-      <minesweeper-game :cols="5" :rows="5" :bombs="2"></minesweeper-game>
+      <minesweeper-game></minesweeper-game>
     </v-col>
   </v-row>
 </template>
@@ -23,5 +23,8 @@ export default Vue.extend({
     }
   },
   mounted() {},
+  created() {
+    this.$accessor.GridManager.initGrid('dummy-id')
+  },
 })
 </script>
