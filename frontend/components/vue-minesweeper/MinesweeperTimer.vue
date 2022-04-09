@@ -18,9 +18,6 @@ export default {
       timerReq: false,
     }
   },
-  mounted() {
-    this.initTimer()
-  },
   methods: {
     initTimer() {
       if (this.finished) {
@@ -38,11 +35,6 @@ export default {
       if (!this.finished) {
         window.requestAnimationFrame(this.setTimer)
       }
-    },
-  },
-  watch: {
-    finished() {
-      this.initTimer()
     },
   },
 }
