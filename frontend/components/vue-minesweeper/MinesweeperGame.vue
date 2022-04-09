@@ -65,20 +65,6 @@ export default {
     MinesweeperCell,
     MinesweeperTimer,
   },
-  props: {
-    cols: {
-      type: Number,
-      default: 9,
-    },
-    rows: {
-      type: Number,
-      default: 9,
-    },
-    bombs: {
-      type: Number,
-      default: 10,
-    },
-  },
   data() {
     return {
       bombCount: 0,
@@ -88,6 +74,9 @@ export default {
       grid: [],
       dialog: false,
       openTargetCell: null,
+      bombs: 0,
+      cols: 0,
+      rows: 0,
     }
   },
   mounted() {
@@ -99,59 +88,19 @@ export default {
       return `grid-template-columns: repeat(${cols}, 1fr);`
     },
     initGrid() {
-      let { bombs } = this
-      const { cols, rows } = this
-      const size = rows * cols
+      this.bombs = this.$accessor.GridManager.grid.BombsCount()
+      this.cols = this.$accessor.GridManager.grid.ColumnCount()
+      this.rows = this.$accessor.GridManager.grid.RowCount()
       const grid = []
-      const imagePaths = [
-        '025.png',
-        '029.png',
-        '037.png',
-        '040.png',
-        '050.png',
-        '053.png',
-        '054.png',
-        '056.png',
-        '057.png',
-        '101.png',
-        '107.png',
-        '114.png',
-        '120.png',
-        '124.png',
-        '131.png',
-        '137.png',
-        '139.png',
-        '159.png',
-        '60.png',
-        '61.png',
-        '62.png',
-        '66.png',
-        '67.png',
-        '70.png',
-        '72.png',
-        '76.png',
-        '79.png',
-      ]
-      if (bombs > size) {
-        console.log('more bombs than space on the grid!')
-        return
-      }
-      for (let i = 0; i < size; i += 1) {
+      for (let i = 0; i < this.$accessor.GridManager.grid.panels.length; i++) {
         grid.push({
-          hasBomb: false,
+          hasBomb: this.$accessor.GridManager.grid.panels[i].isBomb,
           isOpen: false,
           hasFlag: false,
           bombCount: 0,
           neighborhood: null,
-          image: `images/${imagePaths[i]}`,
+          image: this.$accessor.GridManager.grid.panels[i].imageUrl,
         })
-      }
-      while (bombs > 0) {
-        const num = Math.floor(Math.random() * size)
-        if (grid[num].hasBomb === false) {
-          bombs -= 1
-          grid[num].hasBomb = true
-        }
       }
       this.grid = grid
       this.finished = true

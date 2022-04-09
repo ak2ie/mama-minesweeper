@@ -1,6 +1,15 @@
 <template>
   <div class="minesweeper-cell" :class="getClass()">
-    <v-img v-if="!cell.isOpen" :src="cell.image" contain />
+    <v-img v-if="!cell.isOpen" :src="cell.image" contain>
+      <template #placeholder>
+        <v-row class="fill-height ma-0" align="center" justify="center">
+          <v-progress-circular
+            indeterminate
+            color="grey lighten-5"
+          ></v-progress-circular>
+        </v-row>
+      </template>
+    </v-img>
     <v-img
       v-else
       :src="cell.image"
