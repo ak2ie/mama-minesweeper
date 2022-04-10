@@ -1,12 +1,32 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { MsModule } from './ms/ms.module';
+import { LoggerModule } from 'nestjs-pino';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), MsModule],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: ['.env', '.env.development'],
+    }),
+    MsModule,
+    LoggerModule.forRoot({
+      pinoHttp:
+        process.env.NODE_ENV === 'development'
+          ? {
+              transport: {
+                target: 'pino-pretty',
+                options: {
+                  colorize: true,
+                  levelFirst: true,
+                  translateTime: 'yyyy/mm/dd hh:MM:ss Z',
+                },
+              },
+            }
+          : {},
+    }),
+  ],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
