@@ -79,9 +79,13 @@ export default {
       rows: 0,
     }
   },
-  mounted() {
-    this.initGrid()
+  computed: {
+    // eslint-disable-next-line object-shorthand
+    panels: function () {
+      return this.$accessor.GridManager.grid.panels
+    },
   },
+  mounted() {},
   methods: {
     getGridStyle() {
       const { cols } = this
@@ -271,6 +275,9 @@ export default {
       this.initGrid()
     },
     bombs() {
+      this.initGrid()
+    },
+    panels() {
       this.initGrid()
     },
   },
