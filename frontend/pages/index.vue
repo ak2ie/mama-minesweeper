@@ -22,9 +22,8 @@ export default Vue.extend({
       title: 'トップ',
     }
   },
-  mounted() {},
-  created() {
-    this.$accessor.GridManager.initGrid('dummy-id')
+  async mounted() {
+    await this.$accessor.GridManager.initGrid('dummy-id')
   },
 })
 </script>
