@@ -6,6 +6,7 @@ import {
   Param,
   HttpStatus,
   HttpException,
+  HttpCode,
 } from '@nestjs/common';
 import { MsService } from './ms.service';
 import { CreateMSDto } from './dto/create-ms.dto';
@@ -19,8 +20,12 @@ export class MsController {
   ) {}
 
   @Post()
+  @HttpCode(200)
   async create(@Body() createMSDto: CreateMSDto) {
-    return await this.msService.create(createMSDto);
+    this.logger.log('リクエスト', createMSDto);
+    const id = await this.msService.create(createMSDto);
+    this.logger.log(`レスポンス:${id}`);
+    return id;
   }
 
   @Get(':id')

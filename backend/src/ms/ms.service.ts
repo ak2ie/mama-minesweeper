@@ -21,7 +21,10 @@ export class MsService {
     if (!existsBomb) {
       throw new Error('地雷が設定されていません');
     }
-    const isAllBomb = createMSDto.panels.every((panel) => panel.isBomb);
+    // " "で囲まれているとそのままでは正しく判定できない
+    const isAllBomb = createMSDto.panels.every(
+      (panel) => panel.isBomb === true,
+    );
     if (isAllBomb) {
       throw new Error('すべてのマスが地雷です');
     }
