@@ -25,6 +25,14 @@
       </minesweeper-cell>
     </div>
 
+    <!-- 完了時アニメーション -->
+    <div v-if="finishedWithWin" id="complete-success">
+      <img src="/images/cracker-animated-1.gif" />
+    </div>
+    <div v-if="finishedWithLose" id="complete-fail">
+      <img src="/images/Bomb4.gif" />
+    </div>
+
     <v-dialog v-model="dialog" width="500">
       <v-card>
         <v-card-title v-show="!finished" class="text-h5 grey lighten-2">
@@ -77,6 +85,8 @@ export default {
       bombs: 0,
       cols: 0,
       rows: 0,
+      finishedWithWin: false,
+      finishedWithLose: false,
     }
   },
   computed: {
@@ -122,6 +132,7 @@ export default {
       if (!remainingGrid) {
         this.finished = true
         this.won = true
+        this.showCompleteAnimation()
       } else {
         // 開けてない かつ 旗も立てていないマスがある場合
         const remainingBlankGrid = this.grid.find(
@@ -136,6 +147,7 @@ export default {
           })
           this.finished = true
           this.won = true
+          this.showCompleteAnimation()
         }
       }
     },
@@ -199,6 +211,7 @@ export default {
           }
         })
         this.finished = true
+        this.showCompleteAnimation()
         return
       }
 
@@ -266,6 +279,19 @@ export default {
       this.clickCell(this.openTargetCell, 0)
       this.dialog = false
     },
+    showCompleteAnimation() {
+      if (this.won) {
+        this.finishedWithWin = true
+        setTimeout(() => {
+          this.finishedWithWin = false
+        }, 3000)
+      } else {
+        this.finishedWithLose = true
+        setTimeout(() => {
+          this.finishedWithLose = false
+        }, 3000)
+      }
+    },
   },
   watch: {
     rows() {
@@ -318,5 +344,25 @@ export default {
       grid-column: 1 / 1;
     }
   }
+}
+
+.minesweeper {
+  position: relative;
+}
+
+#complete-success {
+  position: absolute;
+  top: 100px;
+  left: 0;
+
+  img {
+    width: 100%;
+  }
+}
+
+#complete-fail {
+  position: absolute;
+  top: 100px;
+  left: 0;
 }
 </style>
