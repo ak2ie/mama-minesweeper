@@ -284,12 +284,12 @@ export default {
         this.finishedWithWin = true
         setTimeout(() => {
           this.finishedWithWin = false
-        }, 3000)
+        }, 5000)
       } else {
         this.finishedWithLose = true
         setTimeout(() => {
           this.finishedWithLose = false
-        }, 3000)
+        }, 4000)
       }
     },
   },
@@ -352,7 +352,7 @@ export default {
 
 #complete-success {
   position: absolute;
-  top: 100px;
+  top: 0px;
   left: 0;
 
   img {
@@ -362,7 +362,10 @@ export default {
 
 #complete-fail {
   position: absolute;
-  top: 100px;
-  left: 0;
+  top: 0;
+  left: -50px;
+  @media screen and (min-width: 500px) {
+    left: 0px;
+  }
 }
 </style>
