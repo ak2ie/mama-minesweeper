@@ -33,6 +33,14 @@
       <img src="/images/Bomb4.gif" />
     </div>
 
+    <!-- シェアボタン -->
+    <v-btn
+      color="info"
+      large
+      href="https://twitter.com/intent/tweet?text=%E3%83%86%E3%82%B9%E3%83%88&url=https://mama-ms.web.app/&hashtags=マママインスイーパー"
+      >結果をシェアする<v-icon right>mdi-twitter</v-icon></v-btn
+    >
+
     <v-dialog v-model="dialog" width="500">
       <v-card>
         <v-card-title v-show="!finished" class="text-h5 grey lighten-2">
