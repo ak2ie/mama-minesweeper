@@ -4,6 +4,6 @@ import { MsController } from './ms.controller';
 
 @Module({
   controllers: [MsController],
-  providers: [MsService]
+  providers: [MsService],
 })
 export class MsModule {}

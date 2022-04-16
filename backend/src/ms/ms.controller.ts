@@ -22,10 +22,14 @@ export class MsController {
   @Post()
   @HttpCode(200)
   async create(@Body() createMSDto: CreateMSDto) {
-    this.logger.log('リクエスト', createMSDto);
-    const id = await this.msService.create(createMSDto);
-    this.logger.log(`レスポンス:${id}`);
-    return id;
+    try {
+      this.logger.log('リクエスト', createMSDto);
+      const id = await this.msService.create(createMSDto);
+      this.logger.log(`レスポンス:${id}`);
+      return id;
+    } catch (e) {
+      throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
+    }
   }
 
   @Get(':id')
