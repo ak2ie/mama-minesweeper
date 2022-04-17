@@ -33,14 +33,6 @@
       <img src="/images/Bomb4.gif" />
     </div>
 
-    <!-- シェアボタン -->
-    <v-btn
-      color="info"
-      large
-      href="https://twitter.com/intent/tweet?text=%E3%83%86%E3%82%B9%E3%83%88&url=https://mama-ms.web.app/&hashtags=マママインスイーパー"
-      >結果をシェアする<v-icon right>mdi-twitter</v-icon></v-btn
-    >
-
     <v-dialog v-model="dialog" width="500">
       <v-card>
         <v-card-title v-show="!finished" class="text-h5 grey lighten-2">
@@ -66,6 +58,17 @@
             >閉じる</v-btn
           >
         </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <!-- シェアボタン -->
+    <v-dialog v-model="shareDialog" width="500" hide-overlay="false">
+      <v-card>
+        <v-card-text id="share-button">
+          <v-btn color="info" large :href="twitterText"
+            >結果をシェアする<v-icon right>mdi-twitter</v-icon></v-btn
+          >
+        </v-card-text>
       </v-card>
     </v-dialog>
   </div>
@@ -95,6 +98,8 @@ export default {
       rows: 0,
       finishedWithWin: false,
       finishedWithLose: false,
+      twitterText: '',
+      shareDialog: false,
     }
   },
   computed: {
@@ -131,6 +136,7 @@ export default {
       })
       this.won = false
       this.bombCount = this.bombs
+      this.setTwitterText()
     },
     haveWeWon() {
       if (this.finished) {
@@ -141,6 +147,7 @@ export default {
         this.finished = true
         this.won = true
         this.showCompleteAnimation()
+        this.setTwitterText()
       } else {
         // 開けてない かつ 旗も立てていないマスがある場合
         const remainingBlankGrid = this.grid.find(
@@ -156,6 +163,7 @@ export default {
           this.finished = true
           this.won = true
           this.showCompleteAnimation()
+          this.setTwitterText()
         }
       }
     },
@@ -220,6 +228,7 @@ export default {
         })
         this.finished = true
         this.showCompleteAnimation()
+        this.setTwitterText()
         return
       }
 
@@ -292,12 +301,35 @@ export default {
         this.finishedWithWin = true
         setTimeout(() => {
           this.finishedWithWin = false
+          this.shareDialog = true
         }, 5000)
       } else {
         this.finishedWithLose = true
         setTimeout(() => {
           this.finishedWithLose = false
+          this.shareDialog = true
         }, 4000)
+      }
+    },
+    setTwitterText() {
+      const template = `https://twitter.com/intent/tweet?text=[TEXT]&url=${window.location.href}&hashtags=マママインスイーパー`
+      if (this.started) {
+        if (this.won) {
+          this.twitterText = template.replace(
+            '[TEXT]',
+            `パートナーが思っていることはだいたい分かってます！\n記録：${this.$refs.timer.theTime}秒`
+          )
+        } else {
+          this.twitterText = template.replace(
+            '[TEXT]',
+            `パートナーの思っていることが分かりませんでした...😢\n記録：${this.$refs.timer.theTime}秒`
+          )
+        }
+      } else {
+        this.twitterText = template.replace(
+          '[TEXT]',
+          'パートナーとユーモアのあるコミュニケーションをとってみよう！'
+        )
       }
     },
   },
@@ -375,5 +407,11 @@ export default {
   @media screen and (min-width: 500px) {
     left: 0px;
   }
+}
+
+#share-button {
+  min-height: 100px;
+  text-align: center;
+  padding-top: 20px;
 }
 </style>
