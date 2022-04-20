@@ -12,6 +12,7 @@
       ></minesweeper-timer>
     </div>
 
+    <!-- マインスイーパ -->
     <div class="minesweeper-grid" :style="getGridStyle()">
       <minesweeper-cell
         v-for="(cell, i) in grid"
@@ -30,9 +31,11 @@
       <img src="/images/cracker-animated-1.gif" />
     </div>
     <div v-if="finishedWithLose" id="complete-fail">
-      <img src="/images/Bomb4.gif" />
+      <img class="first" src="/images/Bomb_short.gif" />
+      <img class="second" src="/images/Bomb_short.gif" />
     </div>
 
+    <!-- マスを開くときのダイアログ -->
     <v-dialog v-model="dialog" width="500">
       <v-card>
         <v-card-title v-show="!finished" class="text-h5 grey lighten-2">
@@ -361,11 +364,22 @@ export default {
 }
 
 #complete-fail {
-  position: absolute;
-  top: 0;
-  left: -50px;
-  @media screen and (min-width: 500px) {
-    left: 0px;
+  img.first {
+    position: absolute;
+    top: 0;
+    left: -50px;
+    @media screen and (min-width: 500px) {
+      left: 0px;
+    }
+  }
+
+  img.second {
+    position: absolute;
+    top: 300px;
+    right: -50px;
+    @media screen and (min-width: 500px) {
+      right: 0px;
+    }
   }
 }
 </style>
