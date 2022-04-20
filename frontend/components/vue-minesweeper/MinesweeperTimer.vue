@@ -36,6 +36,11 @@ export default {
         window.requestAnimationFrame(this.setTimer)
       }
     },
+    resetTimer() {
+      this.timer = false
+      this.theTime = 0
+      this.timerReq = false
+    },
   },
 }
 </script>

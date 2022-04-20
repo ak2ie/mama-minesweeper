@@ -123,6 +123,8 @@ export default {
       })
       this.won = false
       this.bombCount = this.bombs
+      this.started = false
+      this.$refs.timer.resetTimer()
     },
     haveWeWon() {
       if (this.finished) {
