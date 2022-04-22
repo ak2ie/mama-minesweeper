@@ -31,8 +31,7 @@
       <img src="/images/cracker-animated-1.gif" />
     </div>
     <div v-if="finishedWithLose" id="complete-fail">
-      <img class="first" src="/images/Bomb_short.gif" />
-      <img class="second" src="/images/Bomb_short.gif" />
+      <img src="/images/Bomb_300_Octree_64bit.gif" />
     </div>
 
     <!-- マスを開くときのダイアログ -->
@@ -364,22 +363,15 @@ export default {
 }
 
 #complete-fail {
-  img.first {
+  img {
     position: absolute;
     top: 0;
-    left: -50px;
+    left: -20px;
     @media screen and (min-width: 500px) {
       left: 0px;
     }
-  }
-
-  img.second {
-    position: absolute;
-    top: 300px;
-    right: -50px;
-    @media screen and (min-width: 500px) {
-      right: 0px;
-    }
+    width: 100%;
+    height: 100%;
   }
 }
 </style>
