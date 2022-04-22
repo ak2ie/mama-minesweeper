@@ -30,7 +30,22 @@ export class MsService {
     }
     const msRepository = getRepository(MineSweeper);
     const ms = new MineSweeper();
-    ms.panels = createMSDto.panels;
+    ms.panels = createMSDto.panels.map((panel) => {
+      let isBomb = false;
+      if (typeof panel.isBomb !== 'string') {
+        isBomb = Boolean(panel.isBomb);
+      }
+      try {
+        const obj = JSON.parse(String(panel.isBomb).toLowerCase());
+        isBomb = obj === true;
+      } catch (e) {
+        isBomb = String(panel.isBomb) !== '';
+      }
+      return {
+        imageUrl: panel.imageUrl,
+        isBomb,
+      };
+    });
     ms.createdAt = new Date();
     const newDoc = await msRepository.create(ms);
     return newDoc.id;
