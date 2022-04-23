@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Create dot env file
-      - shell: bash
+        shell: bash
         run: |
           cd frontend
           touch .env
