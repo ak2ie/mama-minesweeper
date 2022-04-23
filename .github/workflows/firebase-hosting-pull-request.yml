@@ -10,6 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Create dot env file
+      - shell: bash
+        run: |
+          touch .env
+          echo "FOO=${{ secrets.FOO }}" >> frontend/.env
       - run: cd frontend && yarn install && yarn run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
