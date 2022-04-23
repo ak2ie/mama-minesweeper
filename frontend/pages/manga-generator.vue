@@ -56,8 +56,8 @@ export default Vue.extend({
           storageRef
             .child(`${randomString}${now}.png`)
             .put(blob!)
-            .then((snapshot) => {
-              snapshot.ref.getDownloadURL().then((downloadURL) => {
+            .then((snapshot: any) => {
+              snapshot.ref.getDownloadURL().then((downloadURL: string) => {
                 this.downloadURL = downloadURL
               })
             })
