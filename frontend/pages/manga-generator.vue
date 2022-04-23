@@ -36,7 +36,7 @@ export default Vue.extend({
   },
   head() {
     return {
-      title: '１コマ漫画ジェネレーター',
+      title: '１コマ漫画ジェネレーター2',
     }
   },
   mounted() {
