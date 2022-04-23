@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Create dot env file
-      - shell: bash
+        shell: bash
         run: |
           touch frontend/.env
           echo "API_KEY=${{ secrets.API_KEY }}" >> frontend/.env
