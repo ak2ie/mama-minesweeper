@@ -13,8 +13,13 @@ jobs:
       - name: Create dot env file
       - shell: bash
         run: |
-          touch .env
-          echo "FOO=${{ secrets.FOO }}" >> frontend/.env
+          touch frontend/.env
+          echo "API_KEY=${{ secrets.API_KEY }}" >> frontend/.env
+          echo "AUTH_DOMAIN=${{ secrets.AUTH_DOMAIN }}" >> frontend/.env
+          echo "PROJECT_ID=${{ secrets.PROJECT_ID }}" >> frontend/.env
+          echo "STORAGE_BUCKET=${{ secrets.STORAGE_BUCKET }}" >> frontend/.env
+          echo "MESSAGING_SENDER_ID=${{ secrets.MESSAGING_SENDER_ID }}" >> frontend/.env
+          echo "APP_ID=${{ secrets.APP_ID }}" >> frontend/.env
       - run: cd frontend && yarn install && yarn run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
