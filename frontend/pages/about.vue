@@ -30,7 +30,7 @@ export default Vue.extend({
   },
   async mounted() {
     await this.$accessor.GridManager.initGrid('dummy-id')
-    console.log(process.env.PROJECT_ID)
+    console.log(this.$config.PROJECT_ID)
   },
 })
 </script>

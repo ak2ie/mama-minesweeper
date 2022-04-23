@@ -70,4 +70,6 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
+
+  publicRuntimeConfig: { PROJECT_ID: process.env.PROJECT_ID || '' },
 }
