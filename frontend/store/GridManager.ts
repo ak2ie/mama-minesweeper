@@ -34,7 +34,7 @@ export const actions = actionTree(
             panels.map((panel) => {
               return new Panel(panel.imageUrl, panel.isBomb)
             }),
-            5
+            4
           )
         )
       } else {
