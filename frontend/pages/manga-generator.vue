@@ -11,10 +11,10 @@
     </div>
     <div>
       <p>１コマにセリフをつけてみよう</p>
-      <textarea v-model="text" rows="3" cols="50" />
+      <v-textarea v-model="text" rows="3" outlined />
     </div>
     <div>
-      <button type="button" @click="uploadImage">画像を送信</button>
+      <v-btn @click="uploadImage">画像を送信</v-btn>
     </div>
     <div v-if="downloadURL">
       <a :href="downloadURL" target="_blank">{{ downloadURL }}</a>
