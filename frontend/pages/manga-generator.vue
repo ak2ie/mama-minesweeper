@@ -1,7 +1,7 @@
 <template>
   <div>
     <div ref="result" class="manga-container">
-      <img :src="`/manga/${imageFileName}`" alt="" />
+      <img :src="`/images/manga/${imageFileName}`" alt="" />
       <div v-if="text" class="manga-text-outer">
         <p class="manga-text">
           <span class="first-letter">{{ text.substr(0, 1) }}</span>
