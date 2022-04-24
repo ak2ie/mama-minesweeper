@@ -25,7 +25,7 @@ export default Vue.extend({
   },
   head() {
     return {
-      title: 'このサイトについて2',
+      title: 'このサイトについて2222',
     }
   },
   async mounted() {
