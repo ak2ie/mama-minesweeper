@@ -1,23 +1,69 @@
 <template>
-  <div>
+  <div class="generator-container">
     <div ref="result" class="manga-container">
       <img :src="`/images/manga/${imageFileName}`" alt="" />
-      <div v-if="text" class="manga-text-outer">
+      <div
+        v-if="text"
+        class="manga-text-outer"
+        :style="{ top: `calc(7.5vw + ${verticalMove}px)`, right: `calc(7.5vw + ${horizontalMove}px)` }"
+      >
         <p class="manga-text">
           <span class="first-letter">{{ text.substr(0, 1) }}</span>
           <span v-html="text.substr(1).replace('\n', '<br/>')"></span>
         </p>
       </div>
     </div>
-    <div>
-      <p>１コマにセリフをつけてみよう</p>
+    <div class="input-wrap mt-4">
       <v-textarea v-model="text" rows="3" outlined />
     </div>
-    <div>
-      <v-btn @click="uploadImage">画像を送信</v-btn>
+    <div class="row justify-center">
+      <div class="ma-2">
+        <v-btn color="blue-grey" fab dark @click="moveUp">
+          <v-icon dark>
+            mdi-arrow-up-thick
+          </v-icon>
+        </v-btn>
+      </div>
+      <div class="ma-2">
+        <v-btn color="blue-grey" fab dark @click="moveDown">
+          <v-icon dark>
+            mdi-arrow-down-thick
+          </v-icon>
+        </v-btn>
+      </div>
+      <div class="ma-2">
+        <v-btn color="blue-grey" fab dark @click="moveLeft">
+          <v-icon dark>
+            mdi-arrow-left-thick
+          </v-icon>
+        </v-btn>
+      </div>
+      <div class="ma-2">
+        <v-btn color="blue-grey" fab dark @click="moveRight">
+          <v-icon dark>
+            mdi-arrow-right-thick
+          </v-icon>
+        </v-btn>
+      </div>
     </div>
-    <div v-if="downloadURL">
-      <a :href="downloadURL" target="_blank">{{ downloadURL }}</a>
+    <div class="mt-6 text-center">
+      <v-btn
+        :loading="isProcessing"
+        :disabled="isProcessing || isBlank"
+        color="blue-grey"
+        class="white--text"
+        large
+        @click="uploadImage"
+      >
+        カード保存
+        <v-icon right dark>
+          mdi-cloud-upload
+        </v-icon>
+      </v-btn>
+    </div>
+    <div v-if="downloadURL" class="mt-6">
+      <p class="text-center">カードを保存しました！</p>
+      <a :href="downloadURL" target="_blank">保存したカードを表示する</a>
     </div>
   </div>
 </template>
@@ -32,6 +78,9 @@ export default Vue.extend({
       imageFileName: '',
       text: '',
       downloadURL: '',
+      verticalMove: 0,
+      horizontalMove: 0,
+      isProcessing: false,
     }
   },
   head() {
@@ -39,15 +88,33 @@ export default Vue.extend({
       title: '１コマ漫画ジェネレーター',
     }
   },
+  computed: {
+    isBlank(): boolean {
+      return this.text === ''
+    }
+  },
   mounted() {
     this.getImage()
   },
   methods: {
+    moveUp() {
+      this.verticalMove -= 5
+    },
+    moveDown() {
+      this.verticalMove += 5
+    },
+    moveLeft() {
+      this.horizontalMove += 5
+    },
+    moveRight() {
+      this.horizontalMove -= 5
+    },
     getImage() {
       const randomNumber = this.getRandomNumber(7, 1)
       this.imageFileName = `${this.getZeroPad(randomNumber, 2)}.png` || '01.png'
     },
     uploadImage() {
+      this.isProcessing = true
       const storageRef = this.$fire.storage.ref()
       const randomString = this.getRandomString(8)
       const now = Date.now()
@@ -59,6 +126,7 @@ export default Vue.extend({
             .then((snapshot: any) => {
               snapshot.ref.getDownloadURL().then((downloadURL: string) => {
                 this.downloadURL = downloadURL
+                this.isProcessing = false
               })
             })
         }, 'image/png')
@@ -92,6 +160,11 @@ img {
   height: auto;
   vertical-align: bottom;
 }
+.generator-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .manga-container {
   position: relative;
   display: inline-block;
@@ -121,5 +194,9 @@ img {
     padding: 8px;
     letter-spacing: 0;
   }
+}
+.input-wrap {
+  width: 100%;
+  max-width: 1080px;
 }
 </style>
