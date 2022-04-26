@@ -111,8 +111,8 @@ export default Vue.extend({
       this.horizontalMove -= 5
     },
     getImage() {
-      const randomNumber = this.getRandomNumber(7, 1)
-      this.imageFileName = `${this.getZeroPad(randomNumber, 2)}.png` || '01.png'
+      const number = this.$route.params.imageNumber
+      this.imageFileName = `${this.getZeroPad(number, 2)}.png` || '01.png'
     },
     uploadImage() {
       this.isProcessing = true
@@ -140,9 +140,6 @@ export default Vue.extend({
         result += source[Math.floor(Math.random() * source.length)]
       }
       return result
-    },
-    getRandomNumber(max: number, min: number = 0) {
-      return Math.floor(Math.random() * (max - min) + min)
     },
     getZeroPad(value: number, num: number) {
       const _num = typeof num !== 'undefined' ? num : 2
