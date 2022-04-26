@@ -46,12 +46,13 @@
         </v-btn>
       </div>
     </div>
-    <div class="mt-6 text-center">
+    <div class="button-wrap mt-6">
       <v-btn
         :loading="isProcessing"
         :disabled="isProcessing || isBlank"
         color="blue-grey"
         class="white--text"
+        block
         large
         @click="uploadImage"
       >
@@ -198,5 +199,9 @@ img {
 .input-wrap {
   width: 100%;
   max-width: 1080px;
+}
+.button-wrap {
+  width: 100%;
+  max-width: 288px;
 }
 </style>
