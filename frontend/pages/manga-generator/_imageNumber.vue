@@ -201,4 +201,8 @@ img {
   width: 100%;
   max-width: 288px;
 }
+textarea,
+textarea:focus {
+  font-size: 16px;
+}
 </style>
