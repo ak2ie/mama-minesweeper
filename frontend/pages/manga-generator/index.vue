@@ -1,7 +1,7 @@
 <template>
   <div>
     <ul class="manga-list">
-      <li v-for="i in 7" :key="i" class="manga-item">
+      <li v-for="i in fileLength" :key="i" class="manga-item">
         <nuxt-link :to="{path: `/manga-generator/${i}`}">
           <img :src="`/images/manga/${getZeroPad(i, 2)}.png`" alt="" />
         </nuxt-link>
@@ -14,6 +14,11 @@
 import Vue from 'vue'
 
 export default Vue.extend({
+  data() {
+    return {
+      fileLength: 7,
+    }
+  },
   head() {
     return {
       title: '１コマ漫画ジェネレーター',
