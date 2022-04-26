@@ -3,11 +3,10 @@
     <div ref="result" class="manga-container">
       <img :src="`/images/manga/${imageFileName}`" alt="" />
       <div
-        v-if="text"
         class="manga-text-outer"
-        :style="{ top: `calc(7.5vw + ${verticalMove}px)`, right: `calc(7.5vw + ${horizontalMove}px)` }"
+        :style="styleObject"
       >
-        <p class="manga-text">
+        <p v-if="text" class="manga-text">
           <span class="first-letter">{{ text.substr(0, 1) }}</span>
           <span v-html="text.substr(1).replace('\n', '<br/>')"></span>
         </p>
@@ -92,6 +91,12 @@ export default Vue.extend({
   computed: {
     isBlank(): boolean {
       return this.text === ''
+    },
+    styleObject(): { top: string, right: string } {
+      return {
+        top: `calc(7.5vw + ${this.verticalMove}px)`,
+        right: `calc(7.5vw + ${this.horizontalMove}px)`
+      }
     }
   },
   mounted() {
@@ -169,8 +174,9 @@ img {
 }
 .manga-text-outer {
   position: absolute;
-  top: 7.5vw;
-  right: 7.5vw;
+  display: flex;
+  justify-content: flex-end;
+  min-width: 40%;
   max-height: 70vw;
 }
 .manga-text {
