@@ -13,7 +13,7 @@
       </div>
     </div>
     <div class="input-wrap mt-4">
-      <v-textarea v-model="text" rows="3" outlined />
+      <v-textarea v-model="text" rows="3" outlined clearable />
     </div>
     <div class="row justify-center">
       <div class="ma-2">
