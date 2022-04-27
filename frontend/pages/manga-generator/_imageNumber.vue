@@ -46,20 +46,51 @@
       </div>
     </div>
     <div class="button-wrap mt-6">
-      <v-btn
-        :loading="isProcessing"
-        :disabled="isProcessing || isBlank"
-        color="blue-grey"
-        class="white--text"
-        block
-        large
-        @click="uploadImage"
+      <v-dialog
+        v-model="isOpenDialog"
+        max-width="290"
       >
-        カード保存
-        <v-icon right dark>
-          mdi-cloud-upload
-        </v-icon>
-      </v-btn>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            :disabled="isBlank"
+            color="blue-grey"
+            class="white--text"
+            block
+            large
+            v-bind="attrs"
+            v-on="on"
+          >
+            カード保存
+            <v-icon right dark>
+              mdi-cloud-upload
+            </v-icon>
+          </v-btn>
+        </template>
+        <v-card>
+          <v-card-title class="text-h6">
+            サーバーに送信し、カード画像を保存します。<br />よろしいですか？
+          </v-card-title>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="green darken-1"
+              text
+              @click="isOpenDialog = false"
+            >
+              キャンセル
+            </v-btn>
+            <v-btn
+              :loading="isProcessing"
+              :disabled="isProcessing"
+              color="blue-grey"
+              class="white--text"
+              @click="uploadImage"
+            >
+              保存
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </div>
     <div v-if="downloadURL" class="mt-6">
       <p class="text-center">カードを保存しました！</p>
@@ -81,6 +112,7 @@ export default Vue.extend({
       verticalMove: 0,
       horizontalMove: 0,
       isProcessing: false,
+      isOpenDialog: false,
     }
   },
   head() {
@@ -133,6 +165,7 @@ export default Vue.extend({
               snapshot.ref.getDownloadURL().then((downloadURL: string) => {
                 this.downloadURL = downloadURL
                 this.isProcessing = false
+                this.isOpenDialog = false
               })
             })
         }, 'image/png')
