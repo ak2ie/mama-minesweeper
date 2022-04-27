@@ -40,6 +40,9 @@
       <!-- <v-btn icon @click.stop="rightDrawer = !rightDrawer">
         <v-icon>mdi-menu</v-icon>
       </v-btn> -->
+      <v-btn icon to="/setting">
+        <v-icon>mdi-cog</v-icon>
+      </v-btn>
       <v-btn icon to="/about">
         <v-icon>mdi-information</v-icon>
       </v-btn>
