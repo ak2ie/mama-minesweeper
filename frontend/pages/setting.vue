@@ -173,7 +173,7 @@ export default Vue.extend({
     },
     // 作成ボタン
     make(){
-      this.$axios.$post("https://asia-northeast1-mama-ms.cloudfunctions.net/api/ms/", this.cells).then((res:string) => {
+      this.$axios.$post("https://asia-northeast1-mama-ms.cloudfunctions.net/api/ms/", {"panels": this.cells}).then((res:string) => {
         this.url = "https://mama-ms.web.app/games/" + res;
         this.errorMEssage = undefined;
       }).catch((error: any) => {
