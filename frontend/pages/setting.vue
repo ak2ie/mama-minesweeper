@@ -12,7 +12,7 @@
             <v-carousel-item
               v-for="(item,i) in images"
               :key="i"
-              :src="item.src"
+              :src="item"
               reverse-transition="fade-transition"
               transition="fade-transition"
             ></v-carousel-item>
@@ -57,12 +57,14 @@
             <v-btn color="primary" @click="make()">
               <span>作成</span>
             </v-btn>
-            <v-alert v-if="errorMEssage" type="error">
-              ERROR:<span>{{errorMEssage}}</span>
-            </v-alert>
-            <v-alert v-if="url" type="success">
-              URL:<a :href="url">{{url}}</a>
-            </v-alert>
+            <div class="my-3">
+              <v-alert v-if="errorMEssage" type="error">
+                ERROR:<span>{{errorMEssage}}</span>
+              </v-alert>
+              <v-alert v-if="url" type="success">
+                URL:<a :href="url">{{url}}</a>
+              </v-alert>
+            </div>
           </div>
         </div>
         <!-- Page Content  -->
@@ -72,10 +74,6 @@
 <script lang="ts">
 import Vue from 'vue'
 
-interface ImageData {
-  src: string,
-}
-
 interface CellData {
   imageUrl: string|undefined,
   isBomb: boolean
@@ -83,7 +81,7 @@ interface CellData {
 
 interface DataType {
   cells: CellData[],
-  images: ImageData[],
+  images: string[],
   imageSelectModal: boolean,
   selectImage: undefined|string,
   selectCell: undefined|CellData,
@@ -92,27 +90,12 @@ interface DataType {
 }
 
 export default Vue.extend({
-  async asyncData({ $axios }) {
-    // リクエスト（Get）
-    const response = await $axios.$get("https://firestore.googleapis.com/v1/projects/single-frame-manga-generator/databases/(default)/documents/images").then(res => {
-      const a = [];
-      for(const key in res.documents){
-        a.push({
-          src: 'https://firebasestorage.googleapis.com/v0/b/single-frame-manga-generator.appspot.com/o/'+res.documents[key].fields.fileName.stringValue+'?alt=media&token='+res.documents[key].fields.token.stringValue,
-        });
-      };
-      return a;
-    });
-    return {
-      images: response
-    };
-  },
   data():DataType {
     const cells = [];
     const CELL_LENGTH = 16;
     for(let i = 0; i < CELL_LENGTH; i++) {
       cells.push({
-        imageUrl: "",
+        imageUrl: undefined,
         isBomb: false
       });
     }
@@ -133,9 +116,22 @@ export default Vue.extend({
     }
   },
   mounted() {
-    this.changeImageRandom();
+    // 画像一覧を取得してランダム配置
+    this.getImageList().then((res:any) => {
+      this.images = res;
+    }).then(()=>{
+      this.changeImageRandom();
+    });
   },
   methods: {
+    // 一コマ漫画URL一覧取得
+    async getImageList() {
+      const storageRef = this.$fire.storage.ref()
+      const res: any = await storageRef.listAll()
+      return await Promise.all(res.items.map(async (itemRef: any) => {
+        return await itemRef.getDownloadURL()
+      }));
+    },
     // カード選択ボタン
     changeImage(cell:CellData){
       this.selectCell = cell;
@@ -147,7 +143,7 @@ export default Vue.extend({
     },
     // モーダル内のカルーセル選択
     changeTemplate(e:number){
-      this.selectImage = this.images[e].src;
+      this.selectImage = this.images[e];
     },
     // モーダルを閉じる
     hide(){
@@ -162,14 +158,12 @@ export default Vue.extend({
     changeImageRandom(){
       const randomSort = this.images.concat();
       randomSort.sort(()=> Math.random() - 0.5);
-
       for(let i = 0; i < this.cells.length; i++){
         const image = randomSort[i % randomSort.length];
         if(image){
-          this.cells[i].imageUrl = image.src;
+          this.cells[i].imageUrl = image;
         }
       }
-
     },
     // 作成ボタン
     make(){
@@ -177,9 +171,8 @@ export default Vue.extend({
         this.url = "https://mama-ms.web.app/games/" + res;
         this.errorMEssage = undefined;
       }).catch((error: any) => {
-        console.log(error);
         this.url = undefined;
-        this.errorMEssage = error.message;
+        this.errorMEssage = error.response.data.message;
       });
     }
   },
