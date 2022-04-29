@@ -1,20 +1,23 @@
 <template>
 <div class="wrapper">
-    <v-dialog v-model="imageSelectModal">
+    <v-dialog
+      v-model="imageSelectModal"
+      scrollable
+      max-width="500px"
+    >
       <v-card>
         <v-card-title class="text-h5 grey lighten-2">
           画像選択
         </v-card-title>
         <v-card-text>
           <v-carousel
-            @change="changeTemplate"
+            height="auto"
+             @change="changeTemplate"
           >
             <v-carousel-item
               v-for="(item,i) in images"
               :key="i"
               :src="item"
-              reverse-transition="fade-transition"
-              transition="fade-transition"
             ></v-carousel-item>
           </v-carousel>
         </v-card-text>
@@ -22,7 +25,7 @@
         <v-divider></v-divider>
 
         <v-card-actions>
-          <v-btn icon href="https://single-frame-manga-generator.vercel.app/">
+          <v-btn icon to="/manga-generator">
             <v-icon>mdi-image-plus</v-icon>
           </v-btn>
           <v-spacer></v-spacer>
@@ -54,7 +57,10 @@
             <v-btn color="primary" @click="changeImageRandom()">
               <span>ランダム配置</span>
             </v-btn>
-            <v-btn color="primary" @click="make()">
+            <v-btn
+              :loading="isProcessing"
+              :disabled="isProcessing"
+              color="primary" @click="make()">
               <span>作成</span>
             </v-btn>
             <div class="my-3">
@@ -87,6 +93,7 @@ interface DataType {
   selectCell: undefined|CellData,
   url: undefined|string,
   errorMEssage: undefined|string,
+  isProcessing: boolean,
 }
 
 export default Vue.extend({
@@ -108,6 +115,7 @@ export default Vue.extend({
       selectCell: undefined,
       url: undefined,
       errorMEssage: undefined,
+      isProcessing: false,
     }
   },
   head() {
@@ -167,12 +175,15 @@ export default Vue.extend({
     },
     // 作成ボタン
     make(){
+      this.isProcessing = true;
+      this.url = undefined;
+      this.errorMEssage = undefined;
       this.$axios.$post("https://asia-northeast1-mama-ms.cloudfunctions.net/api/ms/", {"panels": this.cells}).then((res:string) => {
         this.url = "https://mama-ms.web.app/games/" + res;
-        this.errorMEssage = undefined;
+        this.isProcessing = false;
       }).catch((error: any) => {
-        this.url = undefined;
         this.errorMEssage = error.response.data.message;
+        this.isProcessing = false;
       });
     }
   },
