@@ -10,7 +10,7 @@
     <div class="mt-6">
       <v-btn
         color="blue-grey"
-        class="white--text"
+        text
         @click="backToSetting"
       >
         設定画面に戻る

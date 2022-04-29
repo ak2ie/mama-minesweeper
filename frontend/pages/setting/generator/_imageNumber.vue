@@ -96,14 +96,21 @@
       <p class="text-center">カードを保存しました！</p>
       <a :href="downloadURL" target="_blank">保存したカードを表示する</a>
     </div>
-    <div class="mt-6">
+    <div class="row justify-space-between mt-6">
+      <v-btn
+        color="blue-grey"
+        text
+        @click="backToSetting"
+      >
+        設定画面に戻る
+      </v-btn>
       <v-btn
         :disabled="!downloadURL"
         color="blue-grey"
         class="white--text"
-        @click="backToSetting"
+        @click="applySetting"
       >
-        カードを設定画面に反映させる
+        設定画面に反映させる
       </v-btn>
     </div>
   </div>
@@ -182,6 +189,10 @@ export default Vue.extend({
       })
     },
     backToSetting() {
+      this.$emit('closeModal')
+      this.$router.go(-2);
+    },
+    applySetting() {
       this.$emit('getImageUrl', { imageUrl: this.downloadURL })
       this.$router.go(-2);
     },
