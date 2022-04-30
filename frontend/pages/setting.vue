@@ -11,6 +11,7 @@
         </v-card-title>
         <v-card-text>
           <v-carousel
+            v-model="currentImageIndex"
             height="auto"
              @change="changeTemplate"
           >
@@ -25,7 +26,7 @@
         <v-divider></v-divider>
 
         <v-card-actions>
-          <v-btn icon to="/manga-generator">
+          <v-btn icon @click.stop="openMangaGeneratorModal">
             <v-icon>mdi-image-plus</v-icon>
           </v-btn>
           <v-spacer></v-spacer>
@@ -36,14 +37,30 @@
       </v-card>
     </v-dialog>
 
+    <v-dialog
+      v-model="mangaGeneratorModal"
+      fullscreen
+      hide-overlay
+      transition="dialog-bottom-transition"
+    >
+      <v-card>
+        <v-card-title class="text-h5 grey lighten-2">
+          カード作成
+        </v-card-title>
+        <v-card-text class="py-4">
+          <nuxt-child @getImageUrl="concatImages($event)" @closeModal="mangaGeneratorModal = false" />
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+
         <!-- Page Content  -->
         <div id="content">
           <div class="container">
             <div class="row mb-3" >
-              <div  v-for="(cell, index) in cells" :key="index" class="col-3 p-0 themed-grid-col">
+              <div v-for="(cell, index) in cells" :key="index" class="col-3 p-0 themed-grid-col">
                 <img :src="cell.imageUrl" />
                 <div>
-                <v-btn @click="changeImage(cell)">
+                <v-btn @click.stop="changeImage(cell)">
                   <v-icon>mdi-image</v-icon>
                 </v-btn>
                 <v-btn :color="cell.isBomb ? 'primary' : 'secondary'" @click="toggleBomb(cell)">
@@ -64,8 +81,8 @@
               <span>作成</span>
             </v-btn>
             <div class="my-3">
-              <v-alert v-if="errorMEssage" type="error">
-                ERROR:<span>{{errorMEssage}}</span>
+              <v-alert v-if="errorMessage" type="error">
+                ERROR:<span>{{errorMessage}}</span>
               </v-alert>
               <v-alert v-if="url" type="success">
                 URL:<a :href="url">{{url}}</a>
@@ -89,11 +106,13 @@ interface DataType {
   cells: CellData[],
   images: string[],
   imageSelectModal: boolean,
+  mangaGeneratorModal: boolean,
   selectImage: undefined|string,
   selectCell: undefined|CellData,
   url: undefined|string,
-  errorMEssage: undefined|string,
+  errorMessage: undefined|string,
   isProcessing: boolean,
+  currentImageIndex: number,
 }
 
 export default Vue.extend({
@@ -111,11 +130,13 @@ export default Vue.extend({
       cells,
       images: [],
       imageSelectModal: false,
+      mangaGeneratorModal: false,
       selectImage: undefined,
       selectCell: undefined,
       url: undefined,
-      errorMEssage: undefined,
+      errorMessage: undefined,
       isProcessing: false,
+      currentImageIndex: 0,
     }
   },
   head() {
@@ -144,6 +165,7 @@ export default Vue.extend({
     changeImage(cell:CellData){
       this.selectCell = cell;
       this.imageSelectModal = true;
+      this.searchImageIndex()
     },
     // 地雷設定ボタン
     toggleBomb(cell:CellData){
@@ -156,6 +178,27 @@ export default Vue.extend({
     // モーダルを閉じる
     hide(){
       this.imageSelectModal = false;
+    },
+    // １コマ漫画ジェネレーターのモーダルを表示
+    openMangaGeneratorModal() {
+      this.mangaGeneratorModal = true;
+      this.$router.push('/setting/manga-generator')
+    },
+    // １コマ漫画生成後に一覧を再取得
+    concatImages(event: any) {
+      this.getImageList().then((res:any) => {
+        this.images = res;
+        this.currentImageIndex = this.images.findIndex((v) => {
+          return v === event.imageUrl
+        })
+        this.selectImage = event.imageUrl;
+        this.mangaGeneratorModal = false;
+      })
+    },
+    searchImageIndex() {
+      this.currentImageIndex = this.images.findIndex((v) => {
+        return this.selectCell ? v === this.selectCell.imageUrl : 0
+      })
     },
     // モーダルのカード保存
     saveImage(){
@@ -177,12 +220,12 @@ export default Vue.extend({
     make(){
       this.isProcessing = true;
       this.url = undefined;
-      this.errorMEssage = undefined;
+      this.errorMessage = undefined;
       this.$axios.$post("https://asia-northeast1-mama-ms.cloudfunctions.net/api/ms/", {"panels": this.cells}).then((res:string) => {
         this.url = "https://mama-ms.web.app/games/" + res;
         this.isProcessing = false;
       }).catch((error: any) => {
-        this.errorMEssage = error.response.data.message;
+        this.errorMessage = error.response.data.message;
         this.isProcessing = false;
       });
     }
