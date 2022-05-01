@@ -73,7 +73,7 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn
-              color="green darken-1"
+              color="blue-grey"
               text
               @click="isOpenDialog = false"
             >
@@ -95,6 +95,23 @@
     <div v-if="downloadURL" class="mt-6">
       <p class="text-center">カードを保存しました！</p>
       <a :href="downloadURL" target="_blank">保存したカードを表示する</a>
+    </div>
+    <div class="row justify-space-between mt-6">
+      <v-btn
+        color="blue-grey"
+        text
+        @click="backToSetting"
+      >
+        設定画面に戻る
+      </v-btn>
+      <v-btn
+        :disabled="!downloadURL"
+        color="blue-grey"
+        class="white--text"
+        @click="applySetting"
+      >
+        設定画面に反映させる
+      </v-btn>
     </div>
   </div>
 </template>
@@ -170,6 +187,14 @@ export default Vue.extend({
             })
         }, 'image/png')
       })
+    },
+    backToSetting() {
+      this.$emit('closeModal')
+      this.$router.go(-2);
+    },
+    applySetting() {
+      this.$emit('getImageUrl', { imageUrl: this.downloadURL })
+      this.$router.go(-2);
     },
     getRandomString(length: number) {
       const source = 'abcdefghijklmnopqrstuvwxyz'

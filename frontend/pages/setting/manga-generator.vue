@@ -2,11 +2,20 @@
   <div>
     <ul class="manga-list">
       <li v-for="i in fileLength" :key="i" class="manga-item">
-        <nuxt-link :to="{path: `/manga-generator/${i}`}">
+        <nuxt-link :to="{path: `/setting/generator/${i}`}">
           <img :src="`/images/manga/${getZeroPad(i, 2)}.png`" alt="" />
         </nuxt-link>
       </li>
     </ul>
+    <div class="mt-6">
+      <v-btn
+        color="blue-grey"
+        text
+        @click="backToSetting"
+      >
+        設定画面に戻る
+      </v-btn>
+    </div>
   </div>
 </template>
 
@@ -25,6 +34,10 @@ export default Vue.extend({
     }
   },
   methods: {
+    backToSetting() {
+      this.$emit('closeModal')
+      this.$router.go(-1)
+    },
     getZeroPad(value: number, num: number) {
       const _num = typeof num !== 'undefined' ? num : 2
       return value.toString().padStart(_num, '0')
