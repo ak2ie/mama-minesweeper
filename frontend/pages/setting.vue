@@ -48,13 +48,19 @@
           カード作成
         </v-card-title>
         <v-card-text class="py-4">
-          <nuxt-child @getImageUrl="concatImages($event)" @closeModal="mangaGeneratorModal = false" />
+          <nuxt-child
+            v-if="$route.query.modal === 'true'"
+            @getImageUrl="concatImages($event)"
+            @closeModal="mangaGeneratorModal = false"
+          />
         </v-card-text>
       </v-card>
     </v-dialog>
 
+        <nuxt-child v-if="$route.query.modal === 'false'" />
+
         <!-- Page Content  -->
-        <div id="content">
+        <div v-if="$route.query.modal == null" id="content">
           <div class="container">
             <div class="row mb-3" >
               <div v-for="(cell, index) in cells" :key="index" class="col-3 p-0 themed-grid-col">
@@ -182,7 +188,7 @@ export default Vue.extend({
     // １コマ漫画ジェネレーターのモーダルを表示
     openMangaGeneratorModal() {
       this.mangaGeneratorModal = true;
-      this.$router.push('/setting/manga-generator')
+      this.$router.push({  path: '/setting/manga-generator', query: { modal: true } })
     },
     // １コマ漫画生成後に一覧を再取得
     concatImages(event: any) {

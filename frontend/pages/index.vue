@@ -43,7 +43,7 @@
     </v-row>
     <v-row justify="center">
       <v-col cols="12" sm="8" md="6">
-        <v-btn block x-large color="secondary" to="manga-generator">カードを作る</v-btn>
+        <v-btn block x-large color="secondary" :to="{ path: '/setting/manga-generator', query: { modal: false } }">カードを作る</v-btn>
       </v-col>
     </v-row>
   </v-container>
