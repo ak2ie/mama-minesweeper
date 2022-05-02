@@ -35,32 +35,27 @@
     </div>
 
     <!-- マスを開くときのダイアログ -->
-    <v-dialog v-model="dialog" width="500">
-      <v-card>
-        <v-card-title v-show="!finished" class="text-h5 grey lighten-2">
-          これは地雷？
-        </v-card-title>
+    <v-dialog
+      v-model="dialog"
+      width="500"
+      content-class="elevation-0 dialog-outer"
+    >
+      <v-img
+        v-if="openTargetCell !== null"
+        :src="openTargetCell.image"
+        contain
+        class="dialog-img"
+      />
 
-        <v-card-text>
-          <v-img
-            v-if="openTargetCell !== null"
-            :src="openTargetCell.image"
-            contain
-          />
-        </v-card-text>
-
-        <v-divider></v-divider>
-
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn v-if="!finished" color="primary" text @click="openCell()"
-            >地雷ではない</v-btn
-          >
-          <v-btn v-else color="primary" text @click="dialog = false"
-            >閉じる</v-btn
-          >
-        </v-card-actions>
-      </v-card>
+      <v-btn
+        color="#222222"
+        dark
+        x-large
+        width="200"
+        class="dialog-bomb-btn"
+        @click="openCell()"
+        >地雷ではない</v-btn
+      >
     </v-dialog>
 
     <!-- シェアボタン -->
@@ -372,6 +367,8 @@ export default {
     display: grid;
     grid-template-columns: repeat(9, 1fr);
     grid-auto-rows: 1fr;
+    border-left: 1px #000000 solid;
+    border-top: 1px #000000 solid;
 
     &:before {
       content: '';
@@ -385,6 +382,11 @@ export default {
       grid-row: 1 / 1;
       grid-column: 1 / 1;
     }
+  }
+
+  &-cell {
+    border-right: 1px #000000 solid;
+    border-bottom: 1px #000000 solid;
   }
 }
 
@@ -419,5 +421,21 @@ export default {
   min-height: 100px;
   text-align: center;
   padding-top: 20px;
+}
+
+.dialog-outer {
+  text-align: center;
+  box-shadow: none;
+}
+
+/* マスをクリックして拡大表示した画像 */
+.dialog-img {
+  border-radius: 20px;
+}
+
+.dialog-bomb-btn {
+  color: #ffffff;
+  margin: 20px 0 0 0;
+  border-radius: 16px;
 }
 </style>

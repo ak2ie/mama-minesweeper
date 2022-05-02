@@ -1,6 +1,6 @@
 <template>
   <div class="minesweeper-cell" :class="getClass()">
-    <v-img v-if="!cell.isOpen" :src="cell.image" contain>
+    <v-img v-if="!cell.isOpen" :src="cell.image" contain class="cell-img">
       <template #placeholder>
         <v-row class="fill-height ma-0" align="center" justify="center">
           <v-progress-circular
@@ -54,7 +54,7 @@ export default {
 .minesweeper {
   &-cell {
     align-items: center;
-    background: rgba(0, 0, 0, 0.1);
+    background: #efefef;
     border: 1px white solid;
     color: #2c3e50;
     cursor: pointer;
@@ -63,6 +63,7 @@ export default {
     justify-content: center;
     min-height: 35px;
     min-width: 35px;
+    padding: 10px 5px;
   }
 
   &-bomb {
@@ -75,6 +76,10 @@ export default {
 
   &-flag {
     background: #2ecc71;
+  }
+
+  .cell-img {
+    border-radius: 8px;
   }
 }
 </style>
