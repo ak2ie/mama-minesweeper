@@ -42,6 +42,11 @@
       <img src="/images/Bomb_300_Octree_64bit.gif" />
     </div>
 
+    <!-- リセットボタン -->
+    <div v-if="finished" class="reset-button" @click="initGrid()">
+      <v-btn color="#222222" dark x-large width="200">もう一度</v-btn>
+    </div>
+
     <!-- マスを開くときのダイアログ -->
     <v-dialog
       v-model="dialog"
@@ -142,6 +147,8 @@ export default {
       this.won = false
       this.bombCount = this.bombs
       this.setTwitterText()
+      this.started = false
+      this.$refs.timer.resetTimer()
     },
     haveWeWon() {
       if (this.finished) {
@@ -471,5 +478,11 @@ export default {
   color: #ffffff;
   margin: 20px 0 0 0;
   border-radius: 16px;
+}
+
+/* リセットボタン */
+.reset-button {
+  text-align: center;
+  margin-top: 30px;
 }
 </style>

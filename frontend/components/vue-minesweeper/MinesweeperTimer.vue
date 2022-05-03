@@ -7,6 +7,9 @@ import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 
 interface DataType {
+  /**
+   * 経過時間[sec]
+   */
   theTime: number
   timer: boolean | number
   timerReq: boolean | number
@@ -51,6 +54,9 @@ export default Vue.extend({
     },
   },
   methods: {
+    /**
+     * スタート
+     */
     initTimer() {
       if (this.finished && typeof this.timerReq === 'number') {
         window.cancelAnimationFrame(this.timerReq)
@@ -69,6 +75,14 @@ export default Vue.extend({
           window.requestAnimationFrame(this.setTimer)
         }
       }
+    },
+    /**
+     * リセット
+     */
+    resetTimer() {
+      this.theTime = 0
+      this.timer = false
+      this.timerReq = false
     },
   },
 } as ThisTypedComponentOptionsWithRecordProps<Vue, DataType, MethodType, ComputedType, PropType>)
