@@ -1,15 +1,23 @@
 <template>
   <div class="minesweeper">
     <div class="minesweeper-status">
-      <div class="minesweeper-bombcount">
-        {{ bombCount }}
+      <div class="timer">
+        <div class="timer-title">経過時間</div>
+        <span class="timer-time">
+          <minesweeper-timer
+            ref="timer"
+            class="minesweeper-timer"
+            :finished="finished"
+          ></minesweeper-timer
+        ></span>
       </div>
-      <a href="#" @click.prevent="initGrid"> &#9786; </a>
-      <minesweeper-timer
-        ref="timer"
-        class="minesweeper-timer"
-        :finished="finished"
-      ></minesweeper-timer>
+      <div class="bombcount">
+        <div class="bombcount-title">
+          <img src="/images/bomb_icon.png" width="16" height="16" />
+          地雷の数
+        </div>
+        <span class="bombcount-num">{{ bombCount }}コ</span>
+      </div>
     </div>
 
     <!-- マインスイーパ -->
@@ -59,7 +67,7 @@
     </v-dialog>
 
     <!-- シェアボタン -->
-    <v-dialog v-model="shareDialog" width="500" hide-overlay="false">
+    <v-dialog v-model="shareDialog" width="500">
       <v-card>
         <v-card-text id="share-button">
           <v-btn color="info" large :href="twitterText"
@@ -350,12 +358,9 @@ export default {
 <style lang="scss">
 .minesweeper {
   &-status {
-    display: flex;
-    justify-content: space-between;
-    padding: 1rem;
+    padding: 1rem 0;
 
     > * {
-      flex: 1;
       text-align: center;
     }
   }
@@ -421,6 +426,35 @@ export default {
   min-height: 100px;
   text-align: center;
   padding-top: 20px;
+}
+
+/* 経過時間 */
+.timer {
+  &-title {
+    font-size: 0.9em;
+  }
+  &-time {
+    font-size: 1.8em;
+  }
+}
+
+/* 地雷の数 */
+.bombcount {
+  position: absolute;
+  right: 20px;
+  top: 1rem;
+  &-title {
+    font-size: 0.9em;
+
+    & > img {
+      margin-right: 5px;
+      vertical-align: text-top;
+    }
+  }
+
+  &-num {
+    font-size: 1.8em;
+  }
 }
 
 .dialog-outer {
