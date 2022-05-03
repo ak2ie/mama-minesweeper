@@ -15,9 +15,11 @@
       :src="cell.image"
       gradient="to top right, rgba(255,255,255,.80), rgba(255,255,255,.80)"
       contain
-    />
-    <div v-if="cell.isOpen && cell.bombCount">
-      {{ cell.bombCount }}
+      class="cell-img"
+    >
+    </v-img>
+    <div v-if="cell.isOpen && cell.hasBomb" class="bomb-icon">
+      <img src="/images/bomb_icon.png" width="20" height="20" />
     </div>
     <div v-if="cell.hasFlag">&#9873;</div>
   </div>
@@ -64,10 +66,23 @@ export default {
     min-height: 35px;
     min-width: 35px;
     padding: 10px 5px;
+    position: relative;
   }
 
-  &-bomb {
-    background: #c0392b;
+  &-bomb > div {
+    border: 5px #c0392b solid;
+  }
+
+  &-bomb > div.bomb-icon {
+    position: absolute;
+    top: 15%;
+    right: 10%;
+    background-color: yellow;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    text-align: center;
+    border: none;
   }
 
   &-open {
