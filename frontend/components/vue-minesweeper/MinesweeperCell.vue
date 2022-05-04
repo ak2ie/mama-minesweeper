@@ -1,22 +1,24 @@
 <template>
   <div class="minesweeper-cell" :class="getClass()">
-    <v-img v-if="!cell.isOpen" :src="cell.image" contain class="cell-img">
+    <v-img
+      :src="cell.image"
+      contain
+      class="cell-img"
+      lazy-src="/images/mama-ms-placeholder.png"
+      :gradient="
+        cell.isOpen
+          ? 'to top right, rgba(255,255,255,.80), rgba(255,255,255,.80)'
+          : ''
+      "
+    >
       <template #placeholder>
         <v-row class="fill-height ma-0" align="center" justify="center">
           <v-progress-circular
             indeterminate
-            color="grey lighten-5"
+            color="grey darken-3"
           ></v-progress-circular>
         </v-row>
       </template>
-    </v-img>
-    <v-img
-      v-else
-      :src="cell.image"
-      gradient="to top right, rgba(255,255,255,.80), rgba(255,255,255,.80)"
-      contain
-      class="cell-img"
-    >
     </v-img>
     <div v-if="cell.isOpen && cell.hasBomb" class="bomb-icon">
       <img src="/images/bomb_icon.png" width="20" height="20" />

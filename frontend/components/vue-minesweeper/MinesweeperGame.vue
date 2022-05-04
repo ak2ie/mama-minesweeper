@@ -61,10 +61,11 @@
       />
 
       <v-btn
+        v-if="!finished"
         color="#222222"
         dark
         x-large
-        width="200"
+        width="80%"
         class="dialog-bomb-btn"
         @click="openCell()"
         >地雷ではない</v-btn
@@ -75,8 +76,14 @@
     <v-dialog v-model="shareDialog" width="500">
       <v-card>
         <v-card-text id="share-button">
-          <v-btn color="info" large :href="twitterText"
-            >結果をシェアする<v-icon right>mdi-twitter</v-icon></v-btn
+          <span class="text-subtitle-1 pr-2">経過時間</span
+          ><span class="text-h4">{{ time }}</span>
+          <br />
+          <p class="text-subtitle-1">
+            妻の思っていることはだいたい分かってます！
+          </p>
+          <v-btn color="#222222" dark x-large width="200" :href="twitterText"
+            >シェアする</v-btn
           >
         </v-card-text>
       </v-card>
@@ -117,6 +124,14 @@ export default {
     panels: function () {
       return this.$accessor.GridManager.grid.panels
     },
+    // eslint-disable-next-line object-shorthand
+    time: function () {
+      if (this.finished) {
+        return this.$refs.timer.theTimeMMSS
+      } else {
+        return ''
+      }
+    },
   },
   mounted() {},
   methods: {
@@ -150,16 +165,16 @@ export default {
       this.started = false
       this.$refs.timer.resetTimer()
     },
-    haveWeWon() {
+    async haveWeWon() {
       if (this.finished) {
         return
       }
       const remainingGrid = this.grid.find((g) => !g.isOpen && !g.hasFlag)
       if (!remainingGrid) {
-        this.finished = true
         this.won = true
-        this.showCompleteAnimation()
+        await this.showCompleteAnimation()
         this.setTwitterText()
+        this.finished = true
       } else {
         // 開けてない かつ 旗も立てていないマスがある場合
         const remainingBlankGrid = this.grid.find(
@@ -172,10 +187,10 @@ export default {
               checkCell.isOpen = true
             }
           })
-          this.finished = true
           this.won = true
-          this.showCompleteAnimation()
+          await this.showCompleteAnimation()
           this.setTwitterText()
+          this.finished = true
         }
       }
     },
@@ -220,7 +235,7 @@ export default {
         this.checkNeighborhood(cell, true)
       }
     },
-    clickCell(cell, i) {
+    async clickCell(cell, i) {
       if (this.finished) {
         return
       }
@@ -232,15 +247,16 @@ export default {
       }
       if (cell.hasBomb) {
         // todo bomb!
-        const { grid } = this
-        grid.forEach((checkCell) => {
-          if (checkCell.hasBomb) {
-            checkCell.isOpen = true
-          }
-        })
-        this.finished = true
-        this.showCompleteAnimation()
+        // const { grid } = this
+        // grid.forEach((checkCell) => {
+        //   if (checkCell.hasBomb) {
+        //     checkCell.isOpen = true
+        //   }
+        // })
+        cell.isOpen = true
+        await this.showCompleteAnimation()
         this.setTwitterText()
+        this.finished = true
         return
       }
 
@@ -309,19 +325,23 @@ export default {
       this.dialog = false
     },
     showCompleteAnimation() {
-      if (this.won) {
-        this.finishedWithWin = true
-        setTimeout(() => {
-          this.finishedWithWin = false
-          this.shareDialog = true
-        }, 5000)
-      } else {
-        this.finishedWithLose = true
-        setTimeout(() => {
-          this.finishedWithLose = false
-          this.shareDialog = true
-        }, 4000)
-      }
+      return new Promise((resolve) => {
+        if (this.won) {
+          this.finishedWithWin = true
+          setTimeout(() => {
+            this.finishedWithWin = false
+            this.shareDialog = true
+            resolve('')
+          }, 5000)
+        } else {
+          this.finishedWithLose = true
+          setTimeout(() => {
+            this.finishedWithLose = false
+            this.shareDialog = true
+            resolve('')
+          }, 4000)
+        }
+      })
     },
     setTwitterText() {
       const template = `https://twitter.com/intent/tweet?text=[TEXT]&url=${window.location.href}&hashtags=マママインスイーパー`
@@ -329,12 +349,12 @@ export default {
         if (this.won) {
           this.twitterText = template.replace(
             '[TEXT]',
-            `パートナーが思っていることはだいたい分かってます！\n記録：${this.$refs.timer.theTime}秒`
+            `パートナーが思っていることはだいたい分かってます！\n経過時間 ${this.time}`
           )
         } else {
           this.twitterText = template.replace(
             '[TEXT]',
-            `パートナーの思っていることが分かりませんでした...😢\n記録：${this.$refs.timer.theTime}秒`
+            `パートナーの思っていることが分かりませんでした...😢\n経過時間 ${this.time}`
           )
         }
       } else {
