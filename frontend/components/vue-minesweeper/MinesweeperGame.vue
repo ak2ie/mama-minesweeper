@@ -43,7 +43,7 @@
     </div>
 
     <!-- リセットボタン -->
-    <div v-if="finished" class="reset-button" @click="initGrid()">
+    <div v-if="showResetButton" class="reset-button" @click="initGrid()">
       <v-btn color="#222222" dark x-large width="200">もう一度</v-btn>
     </div>
 
@@ -73,16 +73,16 @@
     </v-dialog>
 
     <!-- シェアボタン -->
-    <v-dialog v-model="shareDialog" width="500">
+    <v-dialog v-model="shareDialog" width="500" @click:outside="showResetButton = true">
       <v-card>
         <v-card-text id="share-button">
           <span class="text-subtitle-1 pr-2">経過時間</span
           ><span class="text-h4">{{ time }}</span>
           <br />
           <p class="text-subtitle-1">
-            妻の思っていることはだいたい分かってます！
+            {{ resultText }}
           </p>
-          <v-btn color="#222222" dark x-large width="200" :href="twitterText"
+          <v-btn color="#222222" dark x-large width="200" :href="twitterText" target="_blank"
             >シェアする</v-btn
           >
         </v-card-text>
@@ -115,8 +115,16 @@ export default {
       rows: 0,
       finishedWithWin: false,
       finishedWithLose: false,
+      /**
+       * twitter投稿用のURL
+       */
       twitterText: '',
+      /**
+       * 遊んだ結果のテキスト
+       */
+      resultText: '',
       shareDialog: false,
+      showResetButton: false,
     }
   },
   computed: {
@@ -126,7 +134,7 @@ export default {
     },
     // eslint-disable-next-line object-shorthand
     time: function () {
-      if (this.finished) {
+      if (this.started) {
         return this.$refs.timer.theTimeMMSS
       } else {
         return ''
@@ -140,6 +148,7 @@ export default {
       return `grid-template-columns: repeat(${cols}, 1fr);`
     },
     initGrid() {
+      this.showResetButton = false;
       this.bombs = this.$accessor.GridManager.grid.BombsCount()
       this.cols = this.$accessor.GridManager.grid.ColumnCount()
       this.rows = this.$accessor.GridManager.grid.RowCount()
@@ -161,7 +170,7 @@ export default {
       })
       this.won = false
       this.bombCount = this.bombs
-      this.setTwitterText()
+      this.setShareText()
       this.started = false
       this.$refs.timer.resetTimer()
     },
@@ -172,8 +181,8 @@ export default {
       const remainingGrid = this.grid.find((g) => !g.isOpen && !g.hasFlag)
       if (!remainingGrid) {
         this.won = true
-        await this.showCompleteAnimation()
-        this.setTwitterText()
+        this.showCompleteAnimation()
+        this.setShareText()
         this.finished = true
       } else {
         // 開けてない かつ 旗も立てていないマスがある場合
@@ -188,9 +197,9 @@ export default {
             }
           })
           this.won = true
-          await this.showCompleteAnimation()
-          this.setTwitterText()
           this.finished = true
+          this.showCompleteAnimation()
+          this.setShareText()
         }
       }
     },
@@ -246,17 +255,10 @@ export default {
         return
       }
       if (cell.hasBomb) {
-        // todo bomb!
-        // const { grid } = this
-        // grid.forEach((checkCell) => {
-        //   if (checkCell.hasBomb) {
-        //     checkCell.isOpen = true
-        //   }
-        // })
         cell.isOpen = true
-        await this.showCompleteAnimation()
-        this.setTwitterText()
         this.finished = true
+        this.showCompleteAnimation()
+        this.setShareText()
         return
       }
 
@@ -325,36 +327,37 @@ export default {
       this.dialog = false
     },
     showCompleteAnimation() {
-      return new Promise((resolve) => {
-        if (this.won) {
-          this.finishedWithWin = true
-          setTimeout(() => {
-            this.finishedWithWin = false
-            this.shareDialog = true
-            resolve('')
-          }, 5000)
-        } else {
-          this.finishedWithLose = true
-          setTimeout(() => {
-            this.finishedWithLose = false
-            this.shareDialog = true
-            resolve('')
-          }, 4000)
-        }
-      })
+      if (this.won) {
+        this.finishedWithWin = true
+        setTimeout(() => {
+          this.finishedWithWin = false
+          this.shareDialog = true
+        }, 5000)
+      } else {
+        this.finishedWithLose = true
+        setTimeout(() => {
+          this.finishedWithLose = false
+          this.shareDialog = true
+        }, 4000)
+      }
     },
-    setTwitterText() {
+    /**
+     * 遊んだ結果シェア用のテキスト
+     */
+    setShareText() {
       const template = `https://twitter.com/intent/tweet?text=[TEXT]&url=${window.location.href}&hashtags=マママインスイーパー`
       if (this.started) {
         if (this.won) {
+          this.resultText = 'パートナーが思っていることはだいたい分かってます！'
           this.twitterText = template.replace(
             '[TEXT]',
-            `パートナーが思っていることはだいたい分かってます！\n経過時間 ${this.time}`
+            `${this.resultText}\n経過時間 ${this.time}`
           )
         } else {
+          this.resultText = 'パートナーの思っていることが分かりませんでした...😢'
           this.twitterText = template.replace(
             '[TEXT]',
-            `パートナーの思っていることが分かりませんでした...😢\n経過時間 ${this.time}`
+            `${this.resultText}\n経過時間 ${this.time}`
           )
         }
       } else {
