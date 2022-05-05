@@ -35,7 +35,11 @@
       <v-btn icon @click.stop="fixed = !fixed">
         <v-icon>mdi-minus</v-icon>
       </v-btn> -->
-      <v-toolbar-title v-text="title" />
+      <v-toolbar-title
+        style="cursor:pointer"
+        @click="$router.push('/')"
+        v-text="title"
+      />
       <v-spacer />
       <!-- <v-btn icon @click.stop="rightDrawer = !rightDrawer">
         <v-icon>mdi-menu</v-icon>
@@ -48,7 +52,7 @@
       </v-btn>
     </v-app-bar>
     <v-main>
-      <v-container>
+      <v-container fill-height>
         <Nuxt />
       </v-container>
     </v-main>

@@ -96,7 +96,7 @@
       <p class="text-center">カードを保存しました！</p>
       <a :href="downloadURL" target="_blank">保存したカードを表示する</a>
     </div>
-    <div class="row justify-space-between mt-6">
+    <div v-if="$route.query.modal === 'true'" class="row justify-space-between mt-6">
       <v-btn
         color="blue-grey"
         text

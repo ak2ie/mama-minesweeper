@@ -2,12 +2,12 @@
   <div>
     <ul class="manga-list">
       <li v-for="i in fileLength" :key="i" class="manga-item">
-        <nuxt-link :to="{path: `/setting/generator/${i}`}">
+        <nuxt-link :to="{ path: `/setting/generator/${i}`, query: { modal: $route.query.modal } }">
           <img :src="`/images/manga/${getZeroPad(i, 2)}.png`" alt="" />
         </nuxt-link>
       </li>
     </ul>
-    <div class="mt-6">
+    <div v-if="$route.query.modal === 'true'" class="mt-6">
       <v-btn
         color="blue-grey"
         text
