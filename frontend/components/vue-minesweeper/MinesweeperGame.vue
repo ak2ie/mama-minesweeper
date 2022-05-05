@@ -1,15 +1,23 @@
 <template>
   <div class="minesweeper">
     <div class="minesweeper-status">
-      <div class="minesweeper-bombcount">
-        {{ bombCount }}
+      <div class="timer">
+        <div class="timer-title">経過時間</div>
+        <span class="timer-time">
+          <minesweeper-timer
+            ref="timer"
+            class="minesweeper-timer"
+            :finished="finished"
+          ></minesweeper-timer
+        ></span>
       </div>
-      <a href="#" @click.prevent="initGrid"> &#9786; </a>
-      <minesweeper-timer
-        ref="timer"
-        class="minesweeper-timer"
-        :finished="finished"
-      ></minesweeper-timer>
+      <div class="bombcount">
+        <div class="bombcount-title">
+          <img src="/images/bomb_icon.png" width="16" height="16" />
+          地雷の数
+        </div>
+        <span class="bombcount-num">{{ bombCount }}コ</span>
+      </div>
     </div>
 
     <!-- マインスイーパ -->
@@ -34,41 +42,48 @@
       <img src="/images/Bomb_300_Octree_64bit.gif" />
     </div>
 
+    <!-- リセットボタン -->
+    <div v-if="showResetButton" class="reset-button" @click="initGrid()">
+      <v-btn color="#222222" dark x-large width="200">もう一度</v-btn>
+    </div>
+
     <!-- マスを開くときのダイアログ -->
-    <v-dialog v-model="dialog" width="500">
-      <v-card>
-        <v-card-title v-show="!finished" class="text-h5 grey lighten-2">
-          これは地雷？
-        </v-card-title>
+    <v-dialog
+      v-model="dialog"
+      width="500"
+      content-class="elevation-0 dialog-outer"
+    >
+      <v-img
+        v-if="openTargetCell !== null"
+        :src="openTargetCell.image"
+        contain
+        class="dialog-img"
+      />
 
-        <v-card-text>
-          <v-img
-            v-if="openTargetCell !== null"
-            :src="openTargetCell.image"
-            contain
-          />
-        </v-card-text>
-
-        <v-divider></v-divider>
-
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn v-if="!finished" color="primary" text @click="openCell()"
-            >地雷ではない</v-btn
-          >
-          <v-btn v-else color="primary" text @click="dialog = false"
-            >閉じる</v-btn
-          >
-        </v-card-actions>
-      </v-card>
+      <v-btn
+        v-if="!finished"
+        color="#222222"
+        dark
+        x-large
+        width="80%"
+        class="dialog-bomb-btn"
+        @click="openCell()"
+        >地雷ではない</v-btn
+      >
     </v-dialog>
 
     <!-- シェアボタン -->
-    <v-dialog v-model="shareDialog" width="500" hide-overlay="false">
+    <v-dialog v-model="shareDialog" width="500" @click:outside="showResetButton = true">
       <v-card>
         <v-card-text id="share-button">
-          <v-btn color="info" large :href="twitterText"
-            >結果をシェアする<v-icon right>mdi-twitter</v-icon></v-btn
+          <span class="text-subtitle-1 pr-2">経過時間</span
+          ><span class="text-h4">{{ time }}</span>
+          <br />
+          <p class="text-subtitle-1">
+            {{ resultText }}
+          </p>
+          <v-btn color="#222222" dark x-large width="200" :href="twitterText" target="_blank"
+            >シェアする</v-btn
           >
         </v-card-text>
       </v-card>
@@ -100,14 +115,30 @@ export default {
       rows: 0,
       finishedWithWin: false,
       finishedWithLose: false,
+      /**
+       * twitter投稿用のURL
+       */
       twitterText: '',
+      /**
+       * 遊んだ結果のテキスト
+       */
+      resultText: '',
       shareDialog: false,
+      showResetButton: false,
     }
   },
   computed: {
     // eslint-disable-next-line object-shorthand
     panels: function () {
       return this.$accessor.GridManager.grid.panels
+    },
+    // eslint-disable-next-line object-shorthand
+    time: function () {
+      if (this.started) {
+        return this.$refs.timer.theTimeMMSS
+      } else {
+        return ''
+      }
     },
   },
   mounted() {},
@@ -117,6 +148,7 @@ export default {
       return `grid-template-columns: repeat(${cols}, 1fr);`
     },
     initGrid() {
+      this.showResetButton = false;
       this.bombs = this.$accessor.GridManager.grid.BombsCount()
       this.cols = this.$accessor.GridManager.grid.ColumnCount()
       this.rows = this.$accessor.GridManager.grid.RowCount()
@@ -138,18 +170,20 @@ export default {
       })
       this.won = false
       this.bombCount = this.bombs
-      this.setTwitterText()
+      this.setShareText()
+      this.started = false
+      this.$refs.timer.resetTimer()
     },
-    haveWeWon() {
+    async haveWeWon() {
       if (this.finished) {
         return
       }
       const remainingGrid = this.grid.find((g) => !g.isOpen && !g.hasFlag)
       if (!remainingGrid) {
-        this.finished = true
         this.won = true
         this.showCompleteAnimation()
-        this.setTwitterText()
+        this.setShareText()
+        this.finished = true
       } else {
         // 開けてない かつ 旗も立てていないマスがある場合
         const remainingBlankGrid = this.grid.find(
@@ -162,10 +196,10 @@ export default {
               checkCell.isOpen = true
             }
           })
-          this.finished = true
           this.won = true
+          this.finished = true
           this.showCompleteAnimation()
-          this.setTwitterText()
+          this.setShareText()
         }
       }
     },
@@ -210,7 +244,7 @@ export default {
         this.checkNeighborhood(cell, true)
       }
     },
-    clickCell(cell, i) {
+    async clickCell(cell, i) {
       if (this.finished) {
         return
       }
@@ -221,16 +255,10 @@ export default {
         return
       }
       if (cell.hasBomb) {
-        // todo bomb!
-        const { grid } = this
-        grid.forEach((checkCell) => {
-          if (checkCell.hasBomb) {
-            checkCell.isOpen = true
-          }
-        })
+        cell.isOpen = true
         this.finished = true
         this.showCompleteAnimation()
-        this.setTwitterText()
+        this.setShareText()
         return
       }
 
@@ -313,18 +341,23 @@ export default {
         }, 4000)
       }
     },
-    setTwitterText() {
+    /**
+     * 遊んだ結果シェア用のテキスト
+     */
+    setShareText() {
       const template = `https://twitter.com/intent/tweet?text=[TEXT]&url=${window.location.href}&hashtags=マママインスイーパー`
       if (this.started) {
         if (this.won) {
+          this.resultText = 'パートナーが思っていることはだいたい分かってます！'
           this.twitterText = template.replace(
             '[TEXT]',
-            `パートナーが思っていることはだいたい分かってます！\n記録：${this.$refs.timer.theTime}秒`
+            `${this.resultText}\n経過時間 ${this.time}`
           )
         } else {
+          this.resultText = 'パートナーの思っていることが分かりませんでした...😢'
           this.twitterText = template.replace(
             '[TEXT]',
-            `パートナーの思っていることが分かりませんでした...😢\n記録：${this.$refs.timer.theTime}秒`
+            `${this.resultText}\n経過時間 ${this.time}`
           )
         }
       } else {
@@ -355,12 +388,9 @@ export default {
 <style lang="scss">
 .minesweeper {
   &-status {
-    display: flex;
-    justify-content: space-between;
-    padding: 1rem;
+    padding: 1rem 0;
 
     > * {
-      flex: 1;
       text-align: center;
     }
   }
@@ -372,6 +402,8 @@ export default {
     display: grid;
     grid-template-columns: repeat(9, 1fr);
     grid-auto-rows: 1fr;
+    border-left: 1px #000000 solid;
+    border-top: 1px #000000 solid;
 
     &:before {
       content: '';
@@ -385,6 +417,11 @@ export default {
       grid-row: 1 / 1;
       grid-column: 1 / 1;
     }
+  }
+
+  &-cell {
+    border-right: 1px #000000 solid;
+    border-bottom: 1px #000000 solid;
   }
 }
 
@@ -419,5 +456,56 @@ export default {
   min-height: 100px;
   text-align: center;
   padding-top: 20px;
+}
+
+/* 経過時間 */
+.timer {
+  &-title {
+    font-size: 0.9em;
+  }
+  &-time {
+    font-size: 1.8em;
+  }
+}
+
+/* 地雷の数 */
+.bombcount {
+  position: absolute;
+  right: 20px;
+  top: 1rem;
+  &-title {
+    font-size: 0.9em;
+
+    & > img {
+      margin-right: 5px;
+      vertical-align: text-top;
+    }
+  }
+
+  &-num {
+    font-size: 1.8em;
+  }
+}
+
+.dialog-outer {
+  text-align: center;
+  box-shadow: none;
+}
+
+/* マスをクリックして拡大表示した画像 */
+.dialog-img {
+  border-radius: 20px;
+}
+
+.dialog-bomb-btn {
+  color: #ffffff;
+  margin: 20px 0 0 0;
+  border-radius: 16px;
+}
+
+/* リセットボタン */
+.reset-button {
+  text-align: center;
+  margin-top: 30px;
 }
 </style>
