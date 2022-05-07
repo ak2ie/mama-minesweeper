@@ -12,106 +12,110 @@
         </p>
       </div>
     </div>
-    <div class="input-wrap mt-4">
-      <v-textarea v-model="text" rows="3" outlined clearable />
-    </div>
-    <div class="row justify-center">
-      <div class="ma-2">
-        <v-btn color="blue-grey" fab dark @click="moveUp">
-          <v-icon dark>
-            mdi-arrow-up-thick
-          </v-icon>
-        </v-btn>
-      </div>
-      <div class="ma-2">
-        <v-btn color="blue-grey" fab dark @click="moveDown">
-          <v-icon dark>
-            mdi-arrow-down-thick
-          </v-icon>
-        </v-btn>
-      </div>
-      <div class="ma-2">
-        <v-btn color="blue-grey" fab dark @click="moveLeft">
-          <v-icon dark>
-            mdi-arrow-left-thick
-          </v-icon>
-        </v-btn>
-      </div>
-      <div class="ma-2">
-        <v-btn color="blue-grey" fab dark @click="moveRight">
-          <v-icon dark>
-            mdi-arrow-right-thick
-          </v-icon>
-        </v-btn>
-      </div>
-    </div>
-    <div class="button-wrap mt-6">
-      <v-dialog
-        v-model="isOpenDialog"
-        max-width="290"
-      >
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            :disabled="isBlank"
-            color="blue-grey"
-            class="white--text"
-            block
-            large
-            v-bind="attrs"
-            v-on="on"
+    <div class="footer-container">
+      <v-alert v-if="downloadURL" type="success" class="mt-6 text-center mx-3" dismissible>
+        <p class="text-center">カードを保存しました！</p>
+        <a :href="downloadURL" target="_blank">保存したカードを表示する</a>
+      </v-alert>
+      <div class="actions-container">
+        <div class="input-wrap mt-4 mx-auto">
+          <v-textarea v-model="text" rows="3" outlined clearable />
+        </div>
+        <div class="row justify-center">
+          <div class="ma-2">
+            <v-btn color="#FFB9D6" height="65" class="button rounded-lg" fab @click="moveUp">
+              <v-icon>
+                mdi-arrow-up-thick
+              </v-icon>
+            </v-btn>
+          </div>
+          <div class="ma-2">
+            <v-btn color="#FFB9D6" height="65" class="button rounded-lg" fab @click="moveDown">
+              <v-icon>
+                mdi-arrow-down-thick
+              </v-icon>
+            </v-btn>
+          </div>
+          <div class="ma-2">
+            <v-btn color="#FFB9D6" height="65" class="button rounded-lg" fab @click="moveLeft">
+              <v-icon>
+                mdi-arrow-left-thick
+              </v-icon>
+            </v-btn>
+          </div>
+          <div class="ma-2">
+            <v-btn color="#FFB9D6" height="65" class="button rounded-lg" fab @click="moveRight">
+              <v-icon>
+                mdi-arrow-right-thick
+              </v-icon>
+            </v-btn>
+          </div>
+        </div> 
+        <div class="button-wrap mt-6 mx-auto">
+          <v-dialog
+            v-model="isOpenDialog"
+            max-width="290"
+            persistent
           >
-            カード保存
-            <v-icon right dark>
-              mdi-cloud-upload
-            </v-icon>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                :disabled="isBlank"
+                color="#FFB9D6"
+                class="button rounded-lg"
+                block
+                large
+                v-bind="attrs"
+                height="61"
+                v-on="on"
+              >
+                カードを保存
+              </v-btn>
+            </template>
+            <v-card>
+              <v-card-title class="text-h6">
+                サーバーに送信し、カード画像を保存します。<br />よろしいですか？
+              </v-card-title>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                  color="blue-grey"
+                  text
+                  @click="isOpenDialog = false"
+                >
+                  キャンセル
+                </v-btn>
+                <v-btn
+                  :loading="isProcessing"
+                  :disabled="isProcessing"
+                  color="#FFB9D6"
+                  height="50"
+                  @click="uploadImage"
+                >
+                  保存
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </div>
+        <div v-if="$route.query.modal === 'true'" class="row justify-space-between mt-6">
+          <v-btn
+            color="blue-grey"
+            text
+            @click="backToSetting"
+          >
+            設定画面に戻る
           </v-btn>
-        </template>
-        <v-card>
-          <v-card-title class="text-h6">
-            サーバーに送信し、カード画像を保存します。<br />よろしいですか？
-          </v-card-title>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn
-              color="blue-grey"
-              text
-              @click="isOpenDialog = false"
-            >
-              キャンセル
-            </v-btn>
-            <v-btn
-              :loading="isProcessing"
-              :disabled="isProcessing"
-              color="blue-grey"
-              class="white--text"
-              @click="uploadImage"
-            >
-              保存
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </div>
-    <div v-if="downloadURL" class="mt-6">
-      <p class="text-center">カードを保存しました！</p>
-      <a :href="downloadURL" target="_blank">保存したカードを表示する</a>
-    </div>
-    <div v-if="$route.query.modal === 'true'" class="row justify-space-between mt-6">
-      <v-btn
-        color="blue-grey"
-        text
-        @click="backToSetting"
-      >
-        設定画面に戻る
-      </v-btn>
-      <v-btn
-        :disabled="!downloadURL"
-        color="blue-grey"
-        class="white--text"
-        @click="applySetting"
-      >
-        設定画面に反映させる
-      </v-btn>
+          <v-btn
+            :disabled="!downloadURL"
+            color="#FFE353"
+            class="rounded-lg"
+            height="51"
+            @click="applySetting"
+          >
+            設定画面に反映させる
+          </v-btn>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -225,10 +229,21 @@ img {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 30vh;
 }
 .manga-container {
   position: relative;
   display: inline-block;
+}
+.footer-container {
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+}
+.actions-container {
+  background-color: #FFFFFF;
+  padding: 15px;
 }
 .manga-text-outer {
   position: absolute;
@@ -268,5 +283,12 @@ img {
 textarea,
 textarea:focus {
   font-size: 16px;
+}
+.button {
+  font-size: 19px;
+  box-shadow: 3px 4px 7px rgba(0, 0, 0, 0.15), inset 0px -8px 0px rgba(0, 0, 0, 0.21);
+}
+.footer-container a {
+  color: #FFFFFF;
 }
 </style>
