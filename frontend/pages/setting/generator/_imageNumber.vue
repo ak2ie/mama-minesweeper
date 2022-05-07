@@ -235,6 +235,7 @@ img {
 .manga-container {
   position: relative;
   display: inline-block;
+  background-color: #fff;
 }
 .footer-container {
   width: 100%;
