@@ -11,6 +11,7 @@
           <span v-html="text.substr(1).replace('\n', '<br/>')"></span>
         </p>
       </div>
+      <p class="credit-text">イラスト：白目みさえ</p>
     </div>
     <div class="footer-container">
       <v-alert v-if="downloadURL" type="success" class="mt-6 text-center mx-3" dismissible>
@@ -50,7 +51,7 @@
               </v-icon>
             </v-btn>
           </div>
-        </div> 
+        </div>
         <div class="button-wrap mt-6 mx-auto">
           <v-dialog
             v-model="isOpenDialog"
@@ -234,6 +235,7 @@ img {
 .manga-container {
   position: relative;
   display: inline-block;
+  background-color: #fff;
 }
 .footer-container {
   width: 100%;
@@ -271,6 +273,15 @@ img {
     padding: 8px;
     letter-spacing: 0;
   }
+}
+.credit-text {
+  position: absolute;
+  bottom: 5px;
+  right: 10px;
+  margin: 0;
+  font-size: 14px;
+  font-weight: bold;
+  text-shadow: 2px 2px 0 #fff, 2px -2px 0 #fff, -2px 2px 0 #fff, -2px -2px 0 #fff, 2px 0px 0 #fff, 0px 2px 0 #fff, -2px 0px 0 #fff, 0px -2px 0 #fff;
 }
 .input-wrap {
   width: 100%;

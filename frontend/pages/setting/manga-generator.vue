@@ -66,5 +66,6 @@ img {
   &:nth-child(3n) {
     margin-right: 0;
   }
+  background-color: #fff;
 }
 </style>
