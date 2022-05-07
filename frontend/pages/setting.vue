@@ -84,11 +84,7 @@
               <v-alert v-if="errorMessage" type="error" dismissible @input="errorMessage = ''">
                 ERROR:<span>{{errorMessage}}</span>
               </v-alert>
-<<<<<<< HEAD
               <v-alert v-if="url" type="success" dismissible>
-=======
-              <v-alert v-if="url" type="success">
->>>>>>> e828046 (不要な修正を削除)
                 URL:<a :href="url">{{url}}</a>
                 <span v-if="!isNavigatorShareButton">
                   コピー：
