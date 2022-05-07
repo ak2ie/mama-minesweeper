@@ -86,10 +86,22 @@
               </v-alert>
               <v-alert v-if="url" type="success" dismissible>
                 URL:<a :href="url">{{url}}</a>
+                <span v-if="!isNavigatorShareButton">
+                  コピー：
+                  <v-btn @click="share">
+                    <v-icon>mdi-content-copy</v-icon>
+                  </v-btn>
+                </span>
+                <span v-if="isNavigatorShareButton">
+                  シェア：
+                  <v-btn @click="share">
+                    <v-icon>mdi-share-variant</v-icon>
+                  </v-btn>
+                </span>
               </v-alert>
             </div>
             <div class="footer-actions">
-              <v-btn 
+              <v-btn
                 class="button rounded-lg"
                 color="#FFE353"
                 x-large
@@ -114,6 +126,21 @@
           </div>
         </div>
         <!-- Page Content  -->
+        <v-snackbar
+          v-model="snackbar"
+          :multi-line="true"
+        >
+          {{ snackbarMsg }}
+          <template #action="{ attrs }">
+            <v-btn
+              text
+              v-bind="attrs"
+              @click="snackbar = false"
+            >
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </template>
+        </v-snackbar>
     </div> <!-- wrapper -->
 </template>
 
@@ -136,6 +163,9 @@ interface DataType {
   errorMessage: undefined|string,
   isProcessing: boolean,
   currentImageIndex: number,
+  isNavigatorShareButton: boolean,
+  snackbar: boolean,
+  snackbarMsg: string,
 }
 
 export default Vue.extend({
@@ -160,6 +190,9 @@ export default Vue.extend({
       errorMessage: undefined,
       isProcessing: false,
       currentImageIndex: 0,
+      isNavigatorShareButton: false,
+      snackbar: false,
+      snackbarMsg: "",
     }
   },
   head() {
@@ -174,6 +207,10 @@ export default Vue.extend({
     }).then(()=>{
       this.changeImageRandom();
     });
+    // シェアボタン有効判定
+    if (navigator.share === undefined) {
+      this.isNavigatorShareButton = false;
+    }
   },
   methods: {
     // 一コマ漫画URL一覧取得
@@ -247,10 +284,27 @@ export default Vue.extend({
       this.$axios.$post("https://asia-northeast1-mama-ms.cloudfunctions.net/api/ms/", {"panels": this.cells}).then((res:string) => {
         this.url = "https://mama-ms.web.app/games/" + res;
         this.isProcessing = false;
+        this.share();
       }).catch((error: any) => {
         this.errorMessage = error.response.data.message;
         this.isProcessing = false;
       });
+    },
+    // シェアするボタン
+    async share() {
+      if (navigator.share) {
+        await navigator.share({
+          title: "ママ・マインスイーパー",
+          text: "パートナーからゲームが届きました。",
+          url: this.url
+        });
+        this.snackbar = true;
+        this.snackbarMsg = "パートナーにシェアしました。"
+      } else {
+        await (this as any).$copyText(this.url);
+        this.snackbar = true;
+        this.snackbarMsg = "生成したURLをクリップボードにコピーしました。パートナーにシェアしましょう。"
+      }
     }
   },
 })
