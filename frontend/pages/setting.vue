@@ -43,7 +43,7 @@
       hide-overlay
       transition="dialog-bottom-transition"
     >
-      <v-card>
+      <v-card class="manga-generator-modal">
         <v-card-title class="text-h5 grey lighten-2">
           カード作成
         </v-card-title>
@@ -64,6 +64,9 @@
           <div class="container">
             <div class="row mb-3" >
               <div v-for="(cell, index) in cells" :key="index" class="col-3 p-0 themed-grid-col">
+                <div v-if="cell.isBomb" class="bomb-icon">
+                  <img src="/images/bomb_icon.png" width="20" height="20" />
+                </div>
                 <img :src="cell.imageUrl" />
                 <div>
                 <v-btn @click.stop="changeImage(cell)">
@@ -76,23 +79,37 @@
               </div>
             </div>
           </div>
-          <div>
-            <v-btn color="primary" @click="changeImageRandom()">
-              <span>ランダム配置</span>
-            </v-btn>
-            <v-btn
-              :loading="isProcessing"
-              :disabled="isProcessing"
-              color="primary" @click="make()">
-              <span>作成</span>
-            </v-btn>
-            <div class="my-3">
-              <v-alert v-if="errorMessage" type="error">
+          <div class="footer">
+            <div class="my-3 px-3">
+              <v-alert v-if="errorMessage" type="error" dismissible @input="errorMessage = ''">
                 ERROR:<span>{{errorMessage}}</span>
               </v-alert>
-              <v-alert v-if="url" type="success">
+              <v-alert v-if="url" type="success" dismissible>
                 URL:<a :href="url">{{url}}</a>
               </v-alert>
+            </div>
+            <div class="footer-actions">
+              <v-btn 
+                class="button rounded-lg"
+                color="#FFE353"
+                x-large
+                depressed
+                height="73"
+                @click="changeImageRandom()"
+              >
+                <span>ランダム配置</span>
+              </v-btn>
+              <v-btn
+                :loading="isProcessing"
+                :disabled="isProcessing"
+                color="#FFB9D6"
+                class="button rounded-lg"
+                x-large
+                depressed
+                height="73"
+                @click="make()">
+                <span>ゲームを作る</span>
+              </v-btn>
             </div>
           </div>
         </div>
@@ -247,6 +264,7 @@ export default Vue.extend({
   .themed-grid-col {
     background-color: rgba(86, 61, 124, .15);
     border: 1px solid rgba(86, 61, 124, .2);
+    position: relative;
   }
 
   .themed-grid-col img {
@@ -256,5 +274,52 @@ export default Vue.extend({
 
   .message {
     display: none;
+  }
+
+  #content {
+    margin-bottom: 100px;
+  }
+
+  .footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+  }
+
+  .footer-actions {
+    background-color: #FFFFFF;
+    padding: 15px 0;
+    text-align: center;
+  }
+
+  .button {
+    width: 160px;
+    font-size: 19px;
+    box-shadow: 3px 4px 7px rgba(0, 0, 0, 0.15), inset 0px -8px 0px rgba(0, 0, 0, 0.21);
+  }
+
+  .footer-actions .button:first-of-type {
+    margin-right: 30px;
+  }
+
+  .footer a {
+    color: #FFFFFF;
+  }
+
+  .manga-generator-modal {
+    background-color: #FFB9D6;
+  }
+
+  div.bomb-icon {
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    background-color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    text-align: center;
+    border: none;
   }
 </style>
