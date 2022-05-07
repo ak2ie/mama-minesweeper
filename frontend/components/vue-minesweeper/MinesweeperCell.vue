@@ -4,7 +4,7 @@
       :src="cell.image"
       contain
       class="cell-img"
-      lazy-src="/images/mama-ms-placeholder.png"
+      lazy-src="/images/index-logo-gray.png"
       :gradient="
         cell.isOpen
           ? 'to top right, rgba(255,255,255,.80), rgba(255,255,255,.80)'
@@ -78,7 +78,7 @@ export default {
   &-bomb > div.bomb-icon {
     position: absolute;
     top: 15%;
-    right: 10%;
+    left: 10%;
     background-color: yellow;
     width: 30px;
     height: 30px;

@@ -44,7 +44,7 @@
 
     <!-- リセットボタン -->
     <div v-if="showResetButton" class="reset-button" @click="initGrid()">
-      <v-btn color="#222222" dark x-large width="200">もう一度</v-btn>
+      <v-btn color="#83D2FF" class="button rounded-lg" x-large width="200">もう一度</v-btn>
     </div>
 
     <!-- マスを開くときのダイアログ -->
@@ -62,11 +62,10 @@
 
       <v-btn
         v-if="!finished"
-        color="#222222"
-        dark
+        color="#83D2FF"
+        class="button rounded-lg mt-4"
         x-large
         width="80%"
-        class="dialog-bomb-btn"
         @click="openCell()"
         >地雷ではない</v-btn
       >
@@ -82,10 +81,20 @@
           <p class="text-subtitle-1">
             {{ resultText }}
           </p>
-          <v-btn color="#222222" dark x-large width="200" :href="twitterText" target="_blank"
+          <v-btn
+            color="#83D2FF"
+            class="button rounded-lg"
+            x-large
+            width="200"
+            :href="twitterText"
+            target="_blank"
             >シェアする</v-btn
           >
         </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn text  class="text-right" @click="shareDialog = false;showResetButton = true">閉じる</v-btn>
+        </v-card-actions>
       </v-card>
     </v-dialog>
   </div>
@@ -507,5 +516,17 @@ export default {
 .reset-button {
   text-align: center;
   margin-top: 30px;
+  background-color: #FFFFFF;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  padding: 15px 0;
+}
+
+.button {
+  width: 160px;
+  font-size: 19px;
+  box-shadow: 3px 4px 7px rgba(0, 0, 0, 0.15), inset 0px -8px 0px rgba(0, 0, 0, 0.21);
 }
 </style>

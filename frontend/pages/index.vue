@@ -24,26 +24,30 @@
     </v-dialog>
 
     <v-row justify="center">
-      <v-col cols="12" sm="8">
-        <h1 class="text-center text-h5 text-sm-h4 text-md-h3">マママインスイーパー</h1>
-        <div v-for="i of 4" :key="i" class="text-center">
-          <v-icon v-for="n of 4" :key="n" x-large :color="isBomb() ? 'red' : 'grey'">mdi-bomb</v-icon>
+      <v-col cols="12" sm="8"  class="text-center">
+        <img src="/images/index-logo.png" width="350" height="300" />
+        <div class="bombs">
+          <v-icon class="pink-bomb" large>mdi-bomb</v-icon>
+          <v-icon class="pink-bomb" large>mdi-bomb</v-icon>
+          <v-icon class="black-bomb" large>mdi-bomb</v-icon>
+          <v-icon class="black-bomb" large>mdi-bomb</v-icon>
+          <v-icon class="pink-bomb" large>mdi-bomb</v-icon>
         </div>
       </v-col>
     </v-row>
     <v-row justify="center">
       <v-col cols="12" sm="8" md="6">
-        <v-btn block x-large color="secondary" @click="setGameId">あそぶ</v-btn>
+        <v-btn block x-large color="#83D2FF" class="button rounded-lg" height="77" @click="setGameId">あそぶ</v-btn>
       </v-col>
     </v-row>
     <v-row justify="center">
       <v-col cols="12" sm="8" md="6">
-        <v-btn block x-large color="secondary" to="setting">ゲームを作る</v-btn>
+        <v-btn block x-large color="#FFE353" class="button rounded-lg" height="77" to="setting">ゲームを作る</v-btn>
       </v-col>
     </v-row>
     <v-row justify="center">
       <v-col cols="12" sm="8" md="6">
-        <v-btn block x-large color="secondary" :to="{ path: '/setting/manga-generator', query: { modal: false } }">カードを作る</v-btn>
+        <v-btn block x-large color="#FFB9D6" class="button rounded-lg" height="77" :to="{ path: '/setting/manga-generator', query: { modal: false } }">カードを作る</v-btn>
       </v-col>
     </v-row>
   </v-container>
@@ -89,3 +93,24 @@ export default Vue.extend({
   }
 })
 </script>
+
+<style lang="scss" scoped>
+.bombs {
+  padding: 0 15%;
+  display: flex;
+  justify-content: space-between;
+
+  .black-bomb {
+    color: #555555;
+  }
+
+  .pink-bomb {
+    color: #FF5CBE;
+  }
+}
+
+.button {
+  font-size: 25px;
+  box-shadow: 3px 4px 7px rgba(0, 0, 0, 0.15), inset 0px -8px 0px rgba(0, 0, 0, 0.21);
+}
+</style>
