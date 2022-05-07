@@ -1,6 +1,6 @@
 <template>
   <v-row justify="center" align="center">
-    <v-col cols="12" sm="8" md="6">
+    <v-col cols="12" md="8">
       <div v-if="isError">エラー</div>
       <minesweeper-game v-else></minesweeper-game>
     </v-col>
