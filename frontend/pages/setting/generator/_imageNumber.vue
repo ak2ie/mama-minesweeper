@@ -3,6 +3,7 @@
     <div ref="result" class="manga-container">
       <img :src="`/images/manga/${imageFileName}`" alt="" />
       <div
+        :key="`move${String(verticalMove + horizontalMove)}`"
         class="manga-text-outer"
         :style="styleObject"
       >
@@ -221,6 +222,8 @@ export default Vue.extend({
 $fontSize-m: calc(18px + 15 * (100vw - 360px) / 540);
 $fontSize-l: calc(28px + 35 * (100vw - 360px) / 540);
 $first-letter-circle: calc(50px + 35 * (100vw - 360px) / 540);
+$fontSize-l-half: calc((28px + 35 * (100vw - 360px) / 540) / 2);
+$fontSize-m-half-minus: calc((18px + 15 * (100vw - 360px) / 540) * -1 / 2);
 img {
   max-width: 100%;
   height: auto;
@@ -255,23 +258,39 @@ img {
   max-height: 70vw;
 }
 .manga-text {
+  display: inline;
   font-size: $fontSize-m;
   letter-spacing: 5px;
   writing-mode: vertical-rl;
   .first-letter {
+    position: relative;
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    width: $first-letter-circle;
-    height: $first-letter-circle;
-    line-height: $first-letter-circle;
-    border: 2px solid brown;
-    border-radius: 50%;
+    line-height: $fontSize-l;
     font-size: $fontSize-l;
     font-weight: bold;
     color: brown;
     padding: 8px;
     letter-spacing: 0;
+    &::before {
+      position: absolute;
+      content: '';
+      width: $first-letter-circle;
+      height: $first-letter-circle;
+      border: 2px solid brown;
+      border-radius: 50%;
+    }
+  }
+  @media not all and (min-resolution: 0.001dpcm) {
+    @supports (-webkit-appearance: none) {
+      .first-letter {
+        transform: translateX($fontSize-m-half-minus);
+        &::before {
+          transform: translateX($fontSize-l-half);
+        }
+      }
+    }
   }
 }
 .credit-text {

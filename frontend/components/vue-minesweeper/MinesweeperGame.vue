@@ -410,7 +410,7 @@ export default {
     overflow: auto;
     display: grid;
     grid-template-columns: repeat(9, 1fr);
-    grid-auto-rows: 1fr;
+    //grid-auto-rows: 1fr;
     border-left: 1px #000000 solid;
     border-top: 1px #000000 solid;
 

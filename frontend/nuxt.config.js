@@ -72,7 +72,15 @@ export default {
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {},
+  build: {
+    postcss: {
+      preset: {
+        autoprefixer: {
+          overrideBrowserslist: ['last 2 versions', '> 1%'],
+        },
+      },
+    },
+  },
 
   firebase: {
     config: {
