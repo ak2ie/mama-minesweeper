@@ -34,7 +34,7 @@ export const actions = actionTree(
             panels.map((panel) => {
               return new Panel(panel.imageUrl, panel.isBomb)
             }),
-            4
+            3 // マスの列数
           )
         )
       } else {
