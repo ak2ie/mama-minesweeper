@@ -38,8 +38,10 @@
     <div v-if="finishedWithWin" id="complete-success">
       <img src="/images/cracker-animated-1.gif" />
     </div>
-    <div v-if="finishedWithLose" id="complete-fail">
-      <img src="/images/Bomb_300_Octree_64bit.gif" />
+    <!-- プリロード -->
+    <div v-show="finishedWithLose" id="complete-fail">
+      <!-- 2回目以降もアニメーション再生 -->
+      <img :src="'/images/Bomb_300_Octree_64bit_1time.gif?' + randomText " />
     </div>
 
     <!-- リセットボタン -->
@@ -134,6 +136,10 @@ export default {
       resultText: '',
       shareDialog: false,
       showResetButton: false,
+      /**
+       * gifアニメ再生用
+       */
+      randomText: 'random'
     }
   },
   computed: {
@@ -182,8 +188,9 @@ export default {
       this.setShareText()
       this.started = false
       this.$refs.timer.resetTimer()
+      this.randomText = new Date().getTime()
     },
-    async haveWeWon() {
+    haveWeWon() {
       if (this.finished) {
         return
       }
@@ -253,7 +260,7 @@ export default {
         this.checkNeighborhood(cell, true)
       }
     },
-    async clickCell(cell, i) {
+    clickCell(cell, i) {
       if (this.finished) {
         return
       }
@@ -347,7 +354,7 @@ export default {
         setTimeout(() => {
           this.finishedWithLose = false
           this.shareDialog = true
-        }, 4000)
+        }, 3000)
       }
     },
     /**
