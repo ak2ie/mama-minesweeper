@@ -7,10 +7,12 @@
         class="manga-text-outer"
         :style="styleObject"
       >
-        <p v-if="text" class="manga-text">
-          <span class="first-letter">{{ text.substr(0, 1) }}</span>
-          <span v-html="text.substr(1).replace('\n', '<br/>')"></span>
-        </p>
+        <div v-if="text" class="manga-text">
+          <div v-for="(item, i) in textHtmlItems" :key="`html-${i}`" class="substr-letter">
+            <span v-if="i === 0" class="first-letter vertical-letter">{{ text.substr(0, 1) }}</span>
+            <div v-html="item" class="kaigyo-block"></div>
+          </div>
+        </div>
       </div>
       <p class="credit-text">イラスト：白目みさえ</p>
     </div>
@@ -126,11 +128,41 @@
 import Vue from 'vue'
 import html2canvas from 'html2canvas'
 
-export default Vue.extend({
+type DataType = {
+  imageFileName: string
+  text: string
+  textHtmlItems: string[]
+  downloadURL: string
+  verticalMove: number
+  horizontalMove: number
+  isProcessing: boolean
+  isOpenDialog: boolean
+}
+
+type MethodsType = {
+  moveUp: () => void
+  moveDown: () => void
+  moveLeft: () => void
+  moveRight: () => void
+  getImage: () => void
+  uploadImage: () => void
+  backToSetting: () => void
+  applySetting: () => void
+  getRandomString: (length: number) => string
+  getZeroPad: (value: number, num: number) => string
+}
+
+type ComputedType = {
+  isBlank: boolean
+  styleObject: { top: string, right: string }
+}
+
+export default Vue.extend<DataType, MethodsType, ComputedType, unknown>({
   data() {
     return {
       imageFileName: '',
       text: '',
+      textHtmlItems: [],
       downloadURL: '',
       verticalMove: 0,
       horizontalMove: 0,
@@ -143,6 +175,16 @@ export default Vue.extend({
       title: '１コマ漫画ジェネレーター',
     }
   },
+  watch: {
+    text(value): void {
+      const textSubstr = value.substr(1).split('\n')
+      this.textHtmlItems = textSubstr.map((item: string) => {
+        return item.split('').reduce((acc: string, v: any) => {
+          return acc + `<span>${v.replace('ー', '｜')}</span>`
+        }, '')
+      })
+    },
+  },
   computed: {
     isBlank(): boolean {
       return this.text === ''
@@ -152,35 +194,36 @@ export default Vue.extend({
         top: `calc(7.5vw + ${this.verticalMove}px)`,
         right: `calc(7.5vw + ${this.horizontalMove}px)`
       }
-    }
+    },
   },
   mounted() {
     this.getImage()
   },
   methods: {
-    moveUp() {
+    moveUp(): void {
       this.verticalMove -= 5
     },
-    moveDown() {
+    moveDown(): void {
       this.verticalMove += 5
     },
-    moveLeft() {
+    moveLeft(): void {
       this.horizontalMove += 5
     },
-    moveRight() {
+    moveRight(): void {
       this.horizontalMove -= 5
     },
-    getImage() {
+    getImage(): void {
       const number = this.$route.params.imageNumber
-      this.imageFileName = `${this.getZeroPad(number, 2)}.png` || '01.png'
+      this.imageFileName = `${this.getZeroPad(Number(number), 2)}.png` || '01.png'
     },
-    uploadImage() {
+    uploadImage(): void {
       this.isProcessing = true
       const storageRef = this.$fire.storage.ref()
       const randomString = this.getRandomString(8)
       const now = Date.now()
       html2canvas(this.$refs.result as HTMLElement).then((canvas) => {
         canvas.toBlob((blob) => {
+          console.log(blob)
           storageRef
             .child(`${randomString}${now}.png`)
             .put(blob!)
@@ -194,15 +237,15 @@ export default Vue.extend({
         }, 'image/png')
       })
     },
-    backToSetting() {
+    backToSetting(): void {
       this.$emit('closeModal')
       this.$router.go(-2);
     },
-    applySetting() {
+    applySetting(): void {
       this.$emit('getImageUrl', { imageUrl: this.downloadURL })
       this.$router.go(-2);
     },
-    getRandomString(length: number) {
+    getRandomString(length: number): string {
       const source = 'abcdefghijklmnopqrstuvwxyz'
       let result = ''
       for (let i = 0; i < length; i++) {
@@ -210,7 +253,7 @@ export default Vue.extend({
       }
       return result
     },
-    getZeroPad(value: number, num: number) {
+    getZeroPad(value: number, num: number): string {
       const _num = typeof num !== 'undefined' ? num : 2
       return value.toString().padStart(_num, '0')
     },
@@ -222,8 +265,6 @@ export default Vue.extend({
 $fontSize-m: calc(18px + 15 * (100vw - 360px) / 540);
 $fontSize-l: calc(28px + 35 * (100vw - 360px) / 540);
 $first-letter-circle: calc(50px + 35 * (100vw - 360px) / 540);
-$fontSize-l-half: calc((28px + 35 * (100vw - 360px) / 540) / 2);
-$fontSize-m-half-minus: calc((18px + 15 * (100vw - 360px) / 540) * -1 / 2);
 img {
   max-width: 100%;
   height: auto;
@@ -258,10 +299,13 @@ img {
   max-height: 70vw;
 }
 .manga-text {
-  display: inline;
+  display: inline-flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  flex-flow: row-reverse;
+  align-items: flex-start;
   font-size: $fontSize-m;
   letter-spacing: 5px;
-  writing-mode: vertical-rl;
   .first-letter {
     position: relative;
     display: inline-flex;
@@ -282,15 +326,15 @@ img {
       border-radius: 50%;
     }
   }
-  @media not all and (min-resolution: 0.001dpcm) {
-    @supports (-webkit-appearance: none) {
-      .first-letter {
-        transform: translateX($fontSize-m-half-minus);
-        &::before {
-          transform: translateX($fontSize-l-half);
-        }
-      }
-    }
+  .substr-letter {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .kaigyo-block {
+    display: inline-flex;
+    flex-direction: column;
+    line-height: 1.3;
   }
 }
 .credit-text {
