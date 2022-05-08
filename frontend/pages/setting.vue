@@ -63,7 +63,7 @@
         <div v-if="$route.query.modal == null" id="content">
           <div class="container">
             <div class="row mb-3" >
-              <div v-for="(cell, index) in cells" :key="index" class="col-3 p-0 themed-grid-col">
+              <div v-for="(cell, index) in cells" :key="index" class="col-4 p-0 themed-grid-col">
                 <div v-if="cell.isBomb" class="bomb-icon">
                   <img src="/images/bomb_icon.png" width="20" height="20" />
                 </div>
@@ -171,7 +171,7 @@ interface DataType {
 export default Vue.extend({
   data():DataType {
     const cells = [];
-    const CELL_LENGTH = 16;
+    const CELL_LENGTH = 9;
     for(let i = 0; i < CELL_LENGTH; i++) {
       cells.push({
         imageUrl: undefined,
