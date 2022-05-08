@@ -263,7 +263,7 @@ export default Vue.extend({
     },
     // モーダルのカード保存
     saveImage(){
-      if(this.selectCell) this.selectCell.imageUrl = this.selectImage;
+      if(this.selectCell && this.selectImage) this.selectCell.imageUrl = this.selectImage;
       this.imageSelectModal = false;
     },
     // ランダム配置ボタン
