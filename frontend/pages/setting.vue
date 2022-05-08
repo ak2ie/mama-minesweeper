@@ -63,18 +63,16 @@
         <div v-if="$route.query.modal == null" id="content">
           <div class="container">
             <div class="row mb-3" >
-              <div v-for="(cell, index) in cells" :key="index" class="col-4 p-0 themed-grid-col">
-                <div v-if="cell.isBomb" class="bomb-icon">
-                  <img src="/images/bomb_icon.png" width="20" height="20" />
-                </div>
+              <div v-for="(cell, index) in cells" :key="index" class="col-4 pa-0 themed-grid-col">
+                <v-icon v-if="cell.isBomb" class="bomb-icon">mdi-bomb</v-icon>
                 <img :src="cell.imageUrl" />
-                <div>
-                <v-btn @click.stop="changeImage(cell)">
-                  <v-icon>mdi-image</v-icon>
-                </v-btn>
-                <v-btn :color="cell.isBomb ? 'primary' : 'secondary'" @click="toggleBomb(cell)">
-                  <v-icon>mdi-bomb</v-icon>
-                </v-btn>
+                <div class="d-block d-sm-flex justify-space-around text-center">
+                  <v-btn class="ma-1" @click.stop="changeImage(cell)">
+                    <v-icon>mdi-image</v-icon>
+                  </v-btn>
+                  <v-btn class="ma-1" :color="cell.isBomb ? 'primary' : 'secondary'" @click="toggleBomb(cell)">
+                    <v-icon>mdi-bomb</v-icon>
+                  </v-btn>
                 </div>
               </div>
             </div>
@@ -371,13 +369,13 @@ export default Vue.extend({
     background-color: #FFB9D6;
   }
 
-  div.bomb-icon {
+  .bomb-icon {
     position: absolute;
     top: 10%;
     left: 10%;
-    background-color: white;
-    width: 30px;
-    height: 30px;
+    padding: 5%;
+    color: white;
+    background-color: #FF5CBE;
     border-radius: 50%;
     text-align: center;
     border: none;
