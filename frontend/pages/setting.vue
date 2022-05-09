@@ -378,6 +378,6 @@ export default Vue.extend({
     background-color: #FF5CBE;
     border-radius: 50%;
     text-align: center;
-    border: none;
+    border: 2px solid white;
   }
 </style>
