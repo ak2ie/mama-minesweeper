@@ -95,4 +95,8 @@ export default {
       storage: true,
     },
   },
+
+  publicRuntimeConfig: {
+    TRY_GAME_ID: process.env.TRY_GAME_ID,
+  }
 }
