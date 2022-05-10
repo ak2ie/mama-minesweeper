@@ -272,11 +272,6 @@ export default Vue.extend<DataType, MethodsType, ComputedType, unknown>({
 $fontSize-m: calc(18px + 15 * (100vw - 360px) / 540);
 $fontSize-l: calc(28px + 35 * (100vw - 360px) / 540);
 $first-letter-circle: calc(50px + 35 * (100vw - 360px) / 540);
-img {
-  max-width: 100%;
-  height: auto;
-  vertical-align: bottom;
-}
 .generator-container {
   display: flex;
   flex-direction: column;

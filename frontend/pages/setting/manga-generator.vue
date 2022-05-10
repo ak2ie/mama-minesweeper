@@ -47,11 +47,6 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-img {
-  max-width: 100%;
-  height: auto;
-  vertical-align: bottom;
-}
 .manga-list {
   list-style: none;
   display: flex;
