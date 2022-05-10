@@ -249,7 +249,8 @@ export default Vue.extend<DataType, MethodsType, ComputedType, unknown>({
       this.$router.go(-2);
     },
     applySetting(): void {
-      this.$emit('getImageUrl', { imageUrl: this.downloadURL })
+      this.$emit('closeModal')
+      this.$emit('created', { newCardCreated: true})
       this.$router.go(-2);
     },
     getRandomString(length: number): string {
