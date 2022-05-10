@@ -23,7 +23,13 @@
       </v-alert>
       <div class="actions-container">
         <div class="input-wrap mt-4 mx-auto">
-          <v-textarea v-model="text" rows="3" outlined clearable />
+          <v-textarea
+            v-model="text"
+            rows="3"
+            outlined
+            clearable
+            @click:clear="text = ''"
+          />
         </div>
         <div class="row justify-center">
           <div class="ma-2">
@@ -77,7 +83,7 @@
             </template>
             <v-card>
               <v-card-title class="text-h6">
-                サーバーに送信し、カード画像を保存します。<br />よろしいですか？
+                カードを保存してゲームに使いますか？
               </v-card-title>
               <v-card-actions>
                 <v-spacer></v-spacer>
@@ -130,7 +136,7 @@ import html2canvas from 'html2canvas'
 
 type DataType = {
   imageFileName: string
-  text: string
+  text: string|null
   textHtmlItems: string[]
   downloadURL: string
   verticalMove: number
@@ -177,17 +183,19 @@ export default Vue.extend<DataType, MethodsType, ComputedType, unknown>({
   },
   watch: {
     text(value): void {
-      const textSubstr = value.substr(1).split('\n')
-      this.textHtmlItems = textSubstr.map((item: string) => {
-        return item.split('').reduce((acc: string, v: any) => {
-          return acc + `<span>${v.replace('ー', '｜')}</span>`
-        }, '')
-      })
+      if (value) {
+        const textSubstr = value.substr(1).split('\n')
+        this.textHtmlItems = textSubstr.map((item: string) => {
+          return item.split('').reduce((acc: string, v: any) => {
+            return acc + `<span>${v.replace('ー', '｜')}</span>`
+          }, '')
+        })
+      }
     },
   },
   computed: {
     isBlank(): boolean {
-      return this.text === ''
+      return this.text === '' || this.text === null
     },
     styleObject(): { top: string, right: string } {
       return {
@@ -213,8 +221,7 @@ export default Vue.extend<DataType, MethodsType, ComputedType, unknown>({
       this.horizontalMove -= 5
     },
     getImage(): void {
-      const number = this.$route.params.imageNumber
-      this.imageFileName = `${this.getZeroPad(Number(number), 2)}.png` || '01.png'
+      this.imageFileName = `${this.getZeroPad(Number(this.$route.params.imageNumber), 2)}.png` || '01.png'
     },
     uploadImage(): void {
       this.isProcessing = true
@@ -223,15 +230,15 @@ export default Vue.extend<DataType, MethodsType, ComputedType, unknown>({
       const now = Date.now()
       html2canvas(this.$refs.result as HTMLElement).then((canvas) => {
         canvas.toBlob((blob) => {
-          console.log(blob)
           storageRef
-            .child(`${randomString}${now}.png`)
+            .child(`card${this.getZeroPad(Number(this.$route.params.imageNumber), 2)}-${now}${randomString}.png`)
             .put(blob!)
             .then((snapshot: any) => {
               snapshot.ref.getDownloadURL().then((downloadURL: string) => {
                 this.downloadURL = downloadURL
                 this.isProcessing = false
                 this.isOpenDialog = false
+                this.text = ''
               })
             })
         }, 'image/png')
