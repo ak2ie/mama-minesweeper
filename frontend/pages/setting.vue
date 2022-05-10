@@ -85,7 +85,7 @@
         <v-card-title class="grey lighten-2">
           ゲームに設定する
         </v-card-title>
-        <v-card-text class="mt-4">
+        <v-card-text class="mt-4 text-center">
           <img :src="selectImage ? selectImage.imageUrl : null" alt="" />
         </v-card-text>
         <v-card-actions>
@@ -136,7 +136,20 @@
             <div class="row mb-3" >
               <div v-for="(cell, index) in cells" :key="`cell-${index}`" class="col-4 pa-0 themed-grid-col">
                 <v-icon v-if="cell.isBomb" class="bomb-icon">mdi-bomb</v-icon>
-                <img :src="cell.imageUrl" alt="" />
+                <v-img
+                  :src="cell.imageUrl"
+                  contain
+                  lazy-src="/images/index-logo-gray.png"
+                >
+                  <template #placeholder>
+                    <v-row class="fill-height ma-0" align="center" justify="center">
+                      <v-progress-circular
+                        indeterminate
+                        color="grey darken-3"
+                      ></v-progress-circular>
+                    </v-row>
+                  </template>
+                </v-img>
                 <div class="d-block d-sm-flex justify-space-around text-center">
                   <v-btn class="ma-1" @click.stop="changeImage(cell)">
                     <v-icon>mdi-image</v-icon>
