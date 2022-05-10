@@ -270,9 +270,9 @@ export default Vue.extend<DataType, MethodsType, ComputedType, unknown>({
 </script>
 
 <style lang="scss" scoped>
-$fontSize-m: calc(18px + 15 * (100vw - 360px) / 540);
-$fontSize-l: calc(28px + 35 * (100vw - 360px) / 540);
-$first-letter-circle: calc(50px + 35 * (100vw - 360px) / 540);
+$fontSize-m: calc(18px + 15 * (100vw - 360px) / 580);
+$fontSize-l: calc(28px + 35 * (100vw - 360px) / 580);
+$first-letter-circle: calc(50px + 35 * (100vw - 360px) / 580);
 .generator-container {
   display: flex;
   flex-direction: column;
@@ -302,7 +302,7 @@ $first-letter-circle: calc(50px + 35 * (100vw - 360px) / 540);
   max-height: 70vw;
 }
 .manga-text {
-  display: inline-flex;
+  display: flex;
   flex-wrap: wrap;
   flex-direction: column;
   flex-flow: row-reverse;
