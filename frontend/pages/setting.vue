@@ -153,6 +153,7 @@
                 <div class="d-block d-sm-flex justify-space-around text-center">
                   <v-btn class="ma-1" @click.stop="changeImage(cell)">
                     <v-icon>mdi-image</v-icon>
+                    <span>{{ cell.cellNumber }}</span>
                   </v-btn>
                   <v-btn class="ma-1" :color="cell.isBomb ? 'primary' : 'secondary'" @click="toggleBomb(cell)">
                     <v-icon>mdi-bomb</v-icon>
