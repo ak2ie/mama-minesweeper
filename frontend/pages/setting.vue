@@ -587,6 +587,7 @@ export default Vue.extend({
     border-radius: 50%;
     text-align: center;
     border: 2px solid white;
+    z-index: 1;
   }
 
   .card-type-list {
