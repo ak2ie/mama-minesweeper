@@ -56,7 +56,7 @@
       </v-btn>
     </v-app-bar>
     <v-main :class="getStyleClass()">
-      <v-container fill-height>
+      <v-container fill-height class="justify-center">
         <Nuxt />
       </v-container>
     </v-main>
