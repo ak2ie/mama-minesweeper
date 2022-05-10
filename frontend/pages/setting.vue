@@ -7,7 +7,7 @@
     >
       <v-card>
         <v-card-title class="text-h5 grey lighten-2">
-          画像選択
+          カードを選んでね
         </v-card-title>
         <v-card-text>
           <v-carousel
@@ -26,12 +26,12 @@
         <v-divider></v-divider>
 
         <v-card-actions>
-          <v-btn icon @click.stop="openMangaGeneratorModal">
-            <v-icon>mdi-image-plus</v-icon>
+          <v-btn color="secondary" @click.stop="openMangaGeneratorModal">
+            新しいカードを作る
           </v-btn>
           <v-spacer></v-spacer>
-          <v-btn text color="primary" @click="saveImage">
-            カード保存
+          <v-btn color="primary" @click="saveImage">
+            このカードで決定！
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -45,7 +45,7 @@
     >
       <v-card class="manga-generator-modal">
         <v-card-title class="text-h5 grey lighten-2">
-          カード作成
+          新しいカードを作る
         </v-card-title>
         <v-card-text class="py-4">
           <nuxt-child
@@ -63,27 +63,22 @@
         <div v-if="$route.query.modal == null" id="content">
           <div class="container">
             <div class="row mb-3" >
-              <div v-for="(cell, index) in cells" :key="index" class="col-4 p-0 themed-grid-col">
-                <div v-if="cell.isBomb" class="bomb-icon">
-                  <img src="/images/bomb_icon.png" width="20" height="20" />
-                </div>
+              <div v-for="(cell, index) in cells" :key="index" class="col-4 pa-0 themed-grid-col">
+                <v-icon v-if="cell.isBomb" class="bomb-icon">mdi-bomb</v-icon>
                 <img :src="cell.imageUrl" />
-                <div>
-                <v-btn @click.stop="changeImage(cell)">
-                  <v-icon>mdi-image</v-icon>
-                </v-btn>
-                <v-btn :color="cell.isBomb ? 'primary' : 'secondary'" @click="toggleBomb(cell)">
-                  <v-icon>mdi-bomb</v-icon>
-                </v-btn>
+                <div class="d-block d-sm-flex justify-space-around text-center">
+                  <v-btn class="ma-1" @click.stop="changeImage(cell)">
+                    <v-icon>mdi-image</v-icon>
+                  </v-btn>
+                  <v-btn class="ma-1" :color="cell.isBomb ? 'primary' : 'secondary'" @click="toggleBomb(cell)">
+                    <v-icon>mdi-bomb</v-icon>
+                  </v-btn>
                 </div>
               </div>
             </div>
           </div>
           <div class="footer">
             <div class="my-3 px-3">
-              <v-alert v-if="errorMessage" type="error" dismissible @input="errorMessage = ''">
-                ERROR:<span>{{errorMessage}}</span>
-              </v-alert>
               <v-alert v-if="url" type="success" dismissible>
                 URL:<a :href="url">{{url}}</a>
                 <span v-if="!isNavigatorShareButton">
@@ -120,7 +115,7 @@
                 depressed
                 height="73"
                 @click="make()">
-                <span>ゲームを作る</span>
+                <span>できあがり</span>
               </v-btn>
             </div>
           </div>
@@ -128,6 +123,7 @@
         <!-- Page Content  -->
         <v-snackbar
           v-model="snackbar"
+          :color="snackbarType"
           :multi-line="true"
         >
           {{ snackbarMsg }}
@@ -165,6 +161,7 @@ interface DataType {
   currentImageIndex: number,
   isNavigatorShareButton: boolean,
   snackbar: boolean,
+  snackbarType: string,
   snackbarMsg: string,
 }
 
@@ -192,6 +189,7 @@ export default Vue.extend({
       currentImageIndex: 0,
       isNavigatorShareButton: false,
       snackbar: false,
+      snackbarType: "success",
       snackbarMsg: "",
     }
   },
@@ -224,6 +222,7 @@ export default Vue.extend({
     // カード選択ボタン
     changeImage(cell:CellData){
       this.selectCell = cell;
+      this.selectImage = undefined;
       this.imageSelectModal = true;
       this.searchImageIndex()
     },
@@ -262,7 +261,7 @@ export default Vue.extend({
     },
     // モーダルのカード保存
     saveImage(){
-      if(this.selectCell) this.selectCell.imageUrl = this.selectImage;
+      if(this.selectCell && this.selectImage) this.selectCell.imageUrl = this.selectImage;
       this.imageSelectModal = false;
     },
     // ランダム配置ボタン
@@ -287,6 +286,9 @@ export default Vue.extend({
         this.share();
       }).catch((error: any) => {
         this.errorMessage = error.response.data.message;
+        this.snackbar = true;
+        this.snackbarType = "error";
+        this.snackbarMsg = this.errorMessage ?? "システムエラー";
         this.isProcessing = false;
       });
     },
@@ -299,10 +301,12 @@ export default Vue.extend({
           url: this.url
         });
         this.snackbar = true;
+        this.snackbarType = "success";
         this.snackbarMsg = "パートナーにシェアしました。"
       } else {
         await (this as any).$copyText(this.url);
         this.snackbar = true;
+        this.snackbarType = "success";
         this.snackbarMsg = "生成したURLをクリップボードにコピーしました。パートナーにシェアしましょう。"
       }
     }
@@ -365,15 +369,15 @@ export default Vue.extend({
     background-color: #FFB9D6;
   }
 
-  div.bomb-icon {
+  .bomb-icon {
     position: absolute;
     top: 10%;
     left: 10%;
-    background-color: white;
-    width: 30px;
-    height: 30px;
+    padding: 5%;
+    color: white;
+    background-color: #FF5CBE;
     border-radius: 50%;
     text-align: center;
-    border: none;
+    border: 2px solid white;
   }
 </style>
