@@ -114,7 +114,7 @@
       hide-overlay
       transition="dialog-bottom-transition"
     >
-      <v-card class="manga-generator-modal">
+      <v-card color="#FFB9D6">
         <v-card-title class="text-h5 grey lighten-2">
           新しいカードを作る
         </v-card-title>
@@ -571,10 +571,6 @@ export default Vue.extend({
 
   .footer a {
     color: #FFFFFF;
-  }
-
-  .manga-generator-modal {
-    background-color: #FFB9D6;
   }
 
   .bomb-icon {
