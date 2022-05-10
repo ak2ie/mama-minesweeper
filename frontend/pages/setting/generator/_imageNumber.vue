@@ -231,7 +231,7 @@ export default Vue.extend<DataType, MethodsType, ComputedType, unknown>({
       html2canvas(this.$refs.result as HTMLElement).then((canvas) => {
         canvas.toBlob((blob) => {
           storageRef
-            .child(`card${this.getZeroPad(Number(this.$route.params.imageNumber), 2)}-${now}${randomString}.png`)
+            .child(`card${this.getZeroPad(Number(this.$route.params.imageNumber), 2)}/${now}${randomString}.png`)
             .put(blob!)
             .then((snapshot: any) => {
               snapshot.ref.getDownloadURL().then((downloadURL: string) => {
