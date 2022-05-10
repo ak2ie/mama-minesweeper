@@ -6,7 +6,7 @@
       hide-overlay
       transition="dialog-bottom-transition"
     >
-      <v-card class="image-select-modal">
+      <v-card color="#B5E58E">
         <v-card-title class="text-h5 grey lighten-2">
           カードを選んでね
         </v-card-title>
@@ -26,7 +26,7 @@
             <v-progress-circular
               :size="70"
               :width="7"
-              color="purple"
+              color="purple darken-2"
               indeterminate
             />
           </div>
@@ -575,9 +575,6 @@ export default Vue.extend({
     border: 2px solid white;
   }
 
-  .image-select-modal {
-    background-color: #B5E58E;
-  }
   .card-type-list {
     list-style: none;
     display: flex;
@@ -607,7 +604,7 @@ export default Vue.extend({
     }
     background-color: #fff;
     &.cell-selected {
-      border: 5px solid yellowgreen;
+      border: 5px solid rebeccapurple;
     }
     .cell-number {
       position: absolute;
@@ -620,9 +617,9 @@ export default Vue.extend({
       text-align: center;
       font-size: 16px;
       font-weight: bold;
-      color: green;
+      color: rebeccapurple;
       border-radius: 50%;
-      border: 2px solid yellowgreen;
+      border: 3px solid rebeccapurple;
       background-color: #fff;
     }
   }
