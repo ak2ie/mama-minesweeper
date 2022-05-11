@@ -35,7 +35,7 @@
       <v-btn icon @click.stop="fixed = !fixed">
         <v-icon>mdi-minus</v-icon>
       </v-btn> -->
-      <v-btn icon class="prev-btn" @click="$router.back()">
+      <v-btn icon class="prev-btn" @click="$router.go(-1)">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
       <v-toolbar-title
@@ -56,7 +56,7 @@
       </v-btn>
     </v-app-bar>
     <v-main :class="getStyleClass()">
-      <v-container fill-height>
+      <v-container fill-height class="justify-center">
         <Nuxt />
       </v-container>
     </v-main>

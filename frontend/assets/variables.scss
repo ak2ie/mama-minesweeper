@@ -6,3 +6,23 @@
 @import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@100;300;400;500;700;800;900&family=Noto+Sans+JP:wght@700&display=swap');
 
 $body-font-family: 'M PLUS Rounded 1c', sans-serif;
+
+// break-points
+$huge: 1440;
+$large: 1170;
+$medium: 768;
+$small: 600;
+$tiny: 320;
+
+// media-query
+@mixin largerThan($width) {
+  @media screen and (min-width: $width + 1 + px) {
+    @content;
+  }
+}
+
+@mixin lessThan($width) {
+  @media screen and (max-width: $width + px) {
+    @content;
+  }
+}
