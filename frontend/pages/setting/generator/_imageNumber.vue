@@ -337,7 +337,20 @@ $first-letter-circle: calc(50px + 35 * (100vw - 360px) / 580);
   .kaigyo-block {
     display: inline-flex;
     flex-direction: column;
-    line-height: 1.3;
+    line-height: 1.2;
+  }
+}
+@include largerThan($medium) {
+  .manga-text {
+    font-size: 33px;
+    .first-letter {
+      line-height: 63px;
+      font-size: 63px;
+      &::before {
+        width: 85px;
+        height: 85px;
+      }
+    }
   }
 }
 .credit-text {
