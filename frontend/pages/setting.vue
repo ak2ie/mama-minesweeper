@@ -139,6 +139,7 @@
                 <v-img
                   :src="cell.imageUrl"
                   contain
+                  aspect-ratio="1"
                   lazy-src="/images/index-logo-gray.png"
                 >
                   <template #placeholder>
