@@ -127,6 +127,28 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+    <v-dialog
+      v-model="showImageModal"
+    >
+      <v-card>
+        <v-img
+          :src="selectCell ? selectCell.imageUrl : null"
+          contain
+          aspect-ratio="1"
+          lazy-src="/images/index-logo-gray.png"
+          @click="showImageModal = false"
+        >
+          <template #placeholder>
+            <v-row class="fill-height ma-0" align="center" justify="center">
+              <v-progress-circular
+                indeterminate
+                color="grey darken-3"
+              ></v-progress-circular>
+            </v-row>
+          </template>
+        </v-img>
+      </v-card>
+    </v-dialog>
 
         <nuxt-child v-if="$route.query.modal === 'false'" />
 
@@ -141,6 +163,7 @@
                   contain
                   aspect-ratio="1"
                   lazy-src="/images/index-logo-gray.png"
+                  @click="showImage(cell)"
                 >
                   <template #placeholder>
                     <v-row class="fill-height ma-0" align="center" justify="center">
@@ -254,6 +277,7 @@ interface DataType {
   imageSelectModal: boolean,
   confirmModal: boolean,
   mangaGeneratorModal: boolean,
+  showImageModal: boolean,
   selectImage: ImageData|undefined,
   selectImageIndex: number,
   selectCell: undefined|CellData,
@@ -292,6 +316,7 @@ export default Vue.extend({
       imageSelectModal: false,
       confirmModal: false,
       mangaGeneratorModal: false,
+      showImageModal: false,
       selectImage: undefined,
       selectImageIndex: 0,
       selectCell: undefined,
@@ -441,6 +466,10 @@ export default Vue.extend({
       this.selectCell = cell;
       this.selectImage = undefined;
       this.imageSelectModal = true;
+    },
+    showImage(cell: CellData){
+      this.selectCell = cell;
+      this.showImageModal = true;
     },
     set(index: number, image: ImageData) {
       this.confirmModal = true
