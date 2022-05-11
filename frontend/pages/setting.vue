@@ -46,7 +46,7 @@
                   </li>
                 </ul>
                 <v-btn
-                  :disabled="!!nextPageTokenItems[i] || !!images[i]"
+                  v-if="!!nextPageTokenItems[i]"
                   color="#FFE353"
                   class="button rounded-lg"
                   block
