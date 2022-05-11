@@ -346,9 +346,9 @@ export default Vue.extend({
   async mounted() {
     // 画像一覧を取得してランダム配置
     const res = await this.getInitialImageList()
-    this.initialImages = await Promise.all(res.map(async (item: any) => {
+    this.initialImages = await Promise.all(res.flat().map(async (item: any) => {
       return {
-        imageUrl: await item[0],
+        imageUrl: await item,
         cellNumber: null,
       }
     }))
