@@ -85,7 +85,7 @@
         x-large
         width="80%"
         @click="setFlag(openTargetCell)"
-        >地雷のはず</v-btn
+        >地雷としてマークする</v-btn
       >
     </v-dialog>
 
@@ -168,8 +168,8 @@
                   class="py-3 d-flex flex-column justify-space-between fill-height"
                 >
                   <p class="text-h5">
-                    地雷だと思ったら「地雷のはず」ボタンを押してください。<br />
-                    地雷をマークできます。
+                    地雷だと思ったら「地雷としてマークする」ボタンを押してください。<br />
+                    間違えてマスを開けないようにマークできます。
                   </p>
                   <p class="text-subtitle1 text-center">
                     マスの<span v-if="isTouchDevice">長押し</span
