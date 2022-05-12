@@ -111,6 +111,7 @@
     >
       <v-card>
         <v-img
+          class="modal-image"
           :src="selectCell ? selectCell.imageUrl : null"
           contain
           aspect-ratio="1"
@@ -567,5 +568,8 @@ export default Vue.extend({
   }
   .card-type-item {
     margin-right: 18px;
+  }
+  .modal-image {
+    cursor: pointer;
   }
 </style>

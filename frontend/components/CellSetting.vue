@@ -3,6 +3,7 @@
     <div v-for="(cell, index) in cells" :key="`cell-${index}`" class="col-4 pa-0 themed-grid-col">
       <v-icon v-if="cell.isBomb" class="bomb-icon">mdi-bomb</v-icon>
       <v-img
+        class="image"
         :src="cell.imageUrl"
         contain
         aspect-ratio="1"
@@ -49,6 +50,9 @@ export default Vue.extend({
   background-color: rgba(86, 61, 124, .15);
   border: 1px solid rgba(86, 61, 124, .2);
   position: relative;
+}
+.image {
+  cursor: pointer;
 }
 .bomb-icon {
   position: absolute;
