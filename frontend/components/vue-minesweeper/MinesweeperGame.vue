@@ -299,11 +299,11 @@ export default {
       this.isInitProcessing = true
       this.showResetButton = false
       if (this.grid.length === 0) {
-        const grid = []
+        const grid = [...Array(this.cols * this.rows)].map((_, i) => i)
         const imgGetPromises = []
         for (let i = 0; i < this.$accessor.GridManager.grid.panels.length; i++) {
           const t = this
-        
+
           imgGetPromises.push(new Promise(function(resolve) {
             t.$axios({
               method: 'get',
@@ -312,14 +312,14 @@ export default {
             }).then(response => {
               const reader = new FileReader();
               reader.onloadend = function() {
-                grid.push({
+                grid[i] = {
                   hasBomb: t.$accessor.GridManager.grid.panels[i].isBomb,
                   isOpen: false,
                   hasFlag: false,
                   bombCount: 0,
                   neighborhood: null,
                   image: reader.result
-                })
+                }
                 resolve('')
               }
               reader.readAsDataURL(response.data);
