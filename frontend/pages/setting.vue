@@ -163,7 +163,7 @@
                   contain
                   aspect-ratio="1"
                   lazy-src="/images/index-logo-gray.png"
-                  @click="showImage(cell)"
+                  @click.stop="showImage(cell)"
                 >
                   <template #placeholder>
                     <v-row class="fill-height ma-0" align="center" justify="center">
