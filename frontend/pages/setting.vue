@@ -30,35 +30,14 @@
               indeterminate
             />
           </div>
-          <div v-else>
-            <div v-for="(imageBlock, i) in images" :key="`imageBlock-${i}`">
-              <div v-if="currentCardTypeIndex === i">
-                <ul class="card-list">
-                  <li
-                    v-for="(image, j) in imageBlock"
-                    :key="`image-${j}`"
-                    class="card-item"
-                    :class="{'cell-selected': image.cellNumber}"
-                    @click="set(j, image)"
-                  >
-                    <img :src="image.imageUrl" alt="" />
-                    <div v-if="image.cellNumber" class="cell-number">{{ image.cellNumber }}</div>
-                  </li>
-                </ul>
-                <v-btn
-                  v-if="!!nextPageTokenItems[i]"
-                  color="#FFE353"
-                  class="button rounded-lg"
-                  block
-                  large
-                  height="61"
-                  @click="more(i)"
-                >
-                  もっと表示
-                </v-btn>
-              </div>
-            </div>
-          </div>
+          <card-selector
+            v-else
+            :next-page-token-items="nextPageTokenItems"
+            :current-card-type-index="currentCardTypeIndex"
+            :images="images"
+            @set="set"
+            @more="more"
+          />
         </v-card-text>
 
         <v-divider></v-divider>
@@ -133,35 +112,11 @@
         <!-- Page Content  -->
         <div v-if="$route.query.modal == null" id="content">
           <div class="container">
-            <div class="row mb-3" >
-              <div v-for="(cell, index) in cells" :key="`cell-${index}`" class="col-4 pa-0 themed-grid-col">
-                <v-icon v-if="cell.isBomb" class="bomb-icon">mdi-bomb</v-icon>
-                <v-img
-                  :src="cell.imageUrl"
-                  contain
-                  aspect-ratio="1"
-                  lazy-src="/images/index-logo-gray.png"
-                >
-                  <template #placeholder>
-                    <v-row class="fill-height ma-0" align="center" justify="center">
-                      <v-progress-circular
-                        indeterminate
-                        color="grey darken-3"
-                      ></v-progress-circular>
-                    </v-row>
-                  </template>
-                </v-img>
-                <div class="d-block d-sm-flex justify-space-around text-center">
-                  <v-btn class="ma-1" @click.stop="changeImage(cell)">
-                    <v-icon>mdi-image</v-icon>
-                    <span>{{ cell.cellNumber }}</span>
-                  </v-btn>
-                  <v-btn class="ma-1" :color="cell.isBomb ? 'primary' : 'secondary'" @click="toggleBomb(cell)">
-                    <v-icon>mdi-bomb</v-icon>
-                  </v-btn>
-                </div>
-              </div>
-            </div>
+            <cell-setting
+              :cells="cells"
+              @changeImage="changeImage"
+              @toggleBomb="toggleBomb"
+            />
           </div>
           <div class="footer">
             <div class="my-3 px-3">
@@ -228,6 +183,8 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import CardSelector from "@/components/CardSelector.vue"
+import CellSetting from "@/components/CellSetting.vue"
 
 interface CellData {
   cellNumber: number,
@@ -272,6 +229,10 @@ interface DataType {
 }
 
 export default Vue.extend({
+  components: {
+    CardSelector,
+    CellSetting,
+  },
   data():DataType {
     const cells = [];
     const CELL_LENGTH = 9;
@@ -437,18 +398,21 @@ export default Vue.extend({
       this.newCardCreated = false
     },
     // カード選択ボタン
-    changeImage(cell: CellData){
+    changeImage(...args: any[]){
+      const [cell] = args
       this.selectCell = cell;
       this.selectImage = undefined;
       this.imageSelectModal = true;
     },
-    set(index: number, image: ImageData) {
+    set(...args: any[]) {
+      const [index, image] = args
       this.confirmModal = true
       this.selectImage = image
       this.selectImageIndex = index
     },
     // 地雷設定ボタン
-    toggleBomb(cell: CellData){
+    toggleBomb(...args: any[]){
+      const [cell] = args
       cell.isBomb = !cell.isBomb;
     },
     // モーダルを閉じる
@@ -532,17 +496,6 @@ export default Vue.extend({
   /* ---------------------------------------------------
     CUSTOMIZE
   ----------------------------------------------------- */
-  .themed-grid-col {
-    background-color: rgba(86, 61, 124, .15);
-    border: 1px solid rgba(86, 61, 124, .2);
-    position: relative;
-  }
-
-  .themed-grid-col img {
-    max-width: 100%;
-    max-height: 100%;
-  }
-
   #content {
     margin-bottom: 100px;
   }
@@ -574,19 +527,6 @@ export default Vue.extend({
     color: #FFFFFF;
   }
 
-  .bomb-icon {
-    position: absolute;
-    top: 10%;
-    left: 10%;
-    padding: 5%;
-    color: white;
-    background-color: #FF5CBE;
-    border-radius: 50%;
-    text-align: center;
-    border: 2px solid white;
-    z-index: 1;
-  }
-
   .card-type-list {
     list-style: none;
     display: flex;
@@ -597,42 +537,5 @@ export default Vue.extend({
   }
   .card-type-item {
     margin-right: 18px;
-  }
-  .card-list {
-    list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    margin: 0;
-    padding: 0;
-  }
-  .card-item {
-    position: relative;
-    flex: 0 0 calc(100% / 3 - 12px);
-    margin: 0 12px 12px 0;
-    border-radius: 10px;
-    overflow: hidden;
-    &:nth-child(3n) {
-      margin-right: 0;
-    }
-    background-color: #fff;
-    &.cell-selected {
-      border: 5px solid rebeccapurple;
-    }
-    .cell-number {
-      position: absolute;
-      bottom: 10px;
-      left: 10px;
-      display: inline-block;
-      width: 30px;
-      height: 30px;
-      line-height: 30px;
-      text-align: center;
-      font-size: 16px;
-      font-weight: bold;
-      color: rebeccapurple;
-      border-radius: 50%;
-      border: 3px solid rebeccapurple;
-      background-color: #fff;
-    }
   }
 </style>
