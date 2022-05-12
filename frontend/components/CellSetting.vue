@@ -7,6 +7,7 @@
         contain
         aspect-ratio="1"
         lazy-src="/images/index-logo-gray.png"
+        @click.stop="$emit('showImage', cell)"
       >
         <template #placeholder>
           <v-row class="fill-height ma-0" align="center" justify="center">
