@@ -1,3 +1,28 @@
+@font-face {
+  src: url("./fonts/MPLUSRounded1c-Light.woff") format("woff");
+  font-family: "M PLUS Rounded 1c";
+  font-weight: 300;
+  font-display: swap;
+}
+@font-face {
+  src: url("./fonts/MPLUSRounded1c-Regular.woff") format("woff");
+  font-family: "M PLUS Rounded 1c";
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  src: url("./fonts/MPLUSRounded1c-Medium.woff") format("woff");
+  font-family: "M PLUS Rounded 1c";
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  src: url("./fonts/MPLUSRounded1c-Bold.woff") format("woff");
+  font-family: "M PLUS Rounded 1c";
+  font-weight: 700;
+  font-display: swap;
+}
+
 img {
   max-width: 100%;
   height: auto;
