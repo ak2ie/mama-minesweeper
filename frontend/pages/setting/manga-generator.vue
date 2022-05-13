@@ -25,7 +25,7 @@ import Vue from 'vue'
 export default Vue.extend({
   data() {
     return {
-      fileLength: 7,
+      fileLength: 8,
     }
   },
   head() {
@@ -51,7 +51,6 @@ export default Vue.extend({
   list-style: none;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
   margin: 0;
   padding: 0;
 }
