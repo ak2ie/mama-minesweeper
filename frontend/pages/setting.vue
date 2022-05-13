@@ -322,6 +322,10 @@ export default Vue.extend({
           label: '猛省',
           prefix: 'card07',
         },
+        {
+          label: 'キラキラ',
+          prefix: 'card08',
+        },
       ]
     }
   },

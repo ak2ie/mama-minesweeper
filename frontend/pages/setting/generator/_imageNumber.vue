@@ -5,7 +5,7 @@
       <div
         :key="`move${String(verticalMove + horizontalMove)}`"
         class="manga-text-outer"
-        :style="styleObject"
+        :style="imageFileName === '08.png' ? styleObjectLeft : styleObjectRight"
       >
         <div v-if="text" class="manga-text">
           <div v-for="(item, i) in textHtmlItems" :key="`html-${i}`" class="substr-letter">
@@ -160,7 +160,8 @@ type MethodsType = {
 
 type ComputedType = {
   isBlank: boolean
-  styleObject: { top: string, right: string }
+  styleObjectRight: { top: string, right: string }
+  styleObjectLeft: { top: string, left: string }
 }
 
 export default Vue.extend<DataType, MethodsType, ComputedType, unknown>({
@@ -197,10 +198,16 @@ export default Vue.extend<DataType, MethodsType, ComputedType, unknown>({
     isBlank(): boolean {
       return this.text === '' || this.text === null
     },
-    styleObject(): { top: string, right: string } {
+    styleObjectRight(): { top: string, right: string } {
       return {
         top: `calc(7.5vw + ${this.verticalMove}px)`,
         right: `calc(7.5vw + ${this.horizontalMove}px)`
+      }
+    },
+    styleObjectLeft(): { top: string, left: string } {
+      return {
+        top: `calc(7.5vw + ${this.verticalMove}px)`,
+        left: `-${this.horizontalMove}px`
       }
     },
   },
