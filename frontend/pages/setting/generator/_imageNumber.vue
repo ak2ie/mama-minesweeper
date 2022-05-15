@@ -17,6 +17,10 @@
       <p class="credit-text">イラスト：白目みさえ</p>
     </div>
     <div class="footer-container">
+      <v-alert v-if="foundedNGWord" type="error" class="mt-6 text-center mx-3" dismissible>
+        <p class="text-center">不適切なワードが含まれています</p>
+        <p class="text-center caption mb-0">電話番号・メールアドレスも入力できません</p>
+      </v-alert>
       <v-alert v-if="downloadURL" type="success" class="mt-6 text-center mx-3" dismissible>
         <p class="text-center">カードを保存しました！</p>
         <a :href="downloadURL" target="_blank">保存したカードを表示する</a>
@@ -69,7 +73,7 @@
             block
             large
             height="61"
-            @click.stop="isOpenDialog = true"
+            @click.stop="openConfirm"
           >
             カードを保存
           </v-btn>
@@ -95,7 +99,7 @@
       </div>
     </div>
     <v-dialog
-      v-model="isOpenDialog"
+      v-model="isOpenConfirm"
       max-width="290"
       persistent
     >
@@ -108,7 +112,7 @@
           <v-btn
             color="blue-grey"
             text
-            @click="isOpenDialog = false"
+            @click="isOpenConfirm = false"
           >
             キャンセル
           </v-btn>
@@ -139,7 +143,8 @@ type DataType = {
   verticalMove: number
   horizontalMove: number
   isProcessing: boolean
-  isOpenDialog: boolean
+  isOpenConfirm: boolean
+  foundedNGWord: boolean
 }
 
 type MethodsType = {
@@ -153,6 +158,8 @@ type MethodsType = {
   applySetting: () => void
   getRandomString: (length: number) => string
   getZeroPad: (value: number, num: number) => string
+  openConfirm: () => void
+  checkNGWord: () => void
 }
 
 type ComputedType = {
@@ -171,7 +178,8 @@ export default Vue.extend<DataType, MethodsType, ComputedType, unknown>({
       verticalMove: 0,
       horizontalMove: 0,
       isProcessing: false,
-      isOpenDialog: false,
+      isOpenConfirm: false,
+      foundedNGWord: false,
     }
   },
   head() {
@@ -241,7 +249,7 @@ export default Vue.extend<DataType, MethodsType, ComputedType, unknown>({
               snapshot.ref.getDownloadURL().then((downloadURL: string) => {
                 this.downloadURL = downloadURL
                 this.isProcessing = false
-                this.isOpenDialog = false
+                this.isOpenConfirm = false
                 this.text = ''
               })
             })
@@ -268,6 +276,17 @@ export default Vue.extend<DataType, MethodsType, ComputedType, unknown>({
     getZeroPad(value: number, num: number): string {
       const _num = typeof num !== 'undefined' ? num : 2
       return value.toString().padStart(_num, '0')
+    },
+    async openConfirm(): Promise<void> {
+      await this.checkNGWord()
+      if (!this.foundedNGWord) {
+        this.isOpenConfirm = true
+      }
+    },
+    async checkNGWord(): Promise<void> {
+      this.foundedNGWord = false
+      const checkRes = await this.$axios.$get(`/services/rest/?api_key=${this.$config.PROFANITY_FILTER_API_KEY}&method=webpurify.live.check&text=${this.text}&lang=jp&semail=1&sphone=1&slink=1&format=json`)
+      this.foundedNGWord = checkRes.rsp.found > 0
     },
   },
 })
