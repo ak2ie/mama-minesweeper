@@ -62,50 +62,17 @@
           </div>
         </div>
         <div class="button-wrap mt-6 mx-auto">
-          <v-dialog
-            v-model="isOpenDialog"
-            max-width="290"
-            persistent
+          <v-btn
+            :disabled="isBlank"
+            color="#FFB9D6"
+            class="button rounded-lg"
+            block
+            large
+            height="61"
+            @click.stop="isOpenDialog = true"
           >
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                :disabled="isBlank"
-                color="#FFB9D6"
-                class="button rounded-lg"
-                block
-                large
-                v-bind="attrs"
-                height="61"
-                v-on="on"
-              >
-                カードを保存
-              </v-btn>
-            </template>
-            <v-card>
-              <v-card-title class="text-h6">
-                カードを保存してゲームに使いますか？
-              </v-card-title>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn
-                  color="blue-grey"
-                  text
-                  @click="isOpenDialog = false"
-                >
-                  キャンセル
-                </v-btn>
-                <v-btn
-                  :loading="isProcessing"
-                  :disabled="isProcessing"
-                  color="#FFB9D6"
-                  height="50"
-                  @click="uploadImage"
-                >
-                  保存
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
+            カードを保存
+          </v-btn>
         </div>
         <div v-if="$route.query.modal === 'true'" class="row justify-space-between mt-6">
           <v-btn
@@ -127,6 +94,36 @@
         </div>
       </div>
     </div>
+    <v-dialog
+      v-model="isOpenDialog"
+      max-width="290"
+      persistent
+    >
+      <v-card>
+        <v-card-title class="text-h6">
+          カードを保存してゲームに使いますか？
+        </v-card-title>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="blue-grey"
+            text
+            @click="isOpenDialog = false"
+          >
+            キャンセル
+          </v-btn>
+          <v-btn
+            :loading="isProcessing"
+            :disabled="isProcessing"
+            color="#FFB9D6"
+            height="50"
+            @click="uploadImage"
+          >
+            保存
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
