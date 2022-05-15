@@ -285,7 +285,7 @@ export default Vue.extend<DataType, MethodsType, ComputedType, unknown>({
     },
     async checkNGWord(): Promise<void> {
       this.foundedNGWord = false
-      const checkRes = await this.$axios.$get(`http://api1-ap.webpurify.com/services/rest/?api_key=${this.$config.PROFANITY_FILTER_API_KEY}&method=webpurify.live.check&text=${this.text}&lang=jp&semail=1&sphone=1&slink=1&format=json`)
+      const checkRes = await this.$axios.$get(`http://api1-ap.webpurify.com/services/rest?api_key=${this.$config.PROFANITY_FILTER_API_KEY}&method=webpurify.live.check&text=${this.text}&lang=jp&semail=1&sphone=1&slink=1&format=json`)
       this.foundedNGWord = checkRes.rsp.found > 0
     },
   },
