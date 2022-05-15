@@ -102,5 +102,6 @@ export default {
 
   publicRuntimeConfig: {
     TRY_GAME_ID: process.env.TRY_GAME_ID,
+    PROFANITY_FILTER_API_KEY: process.env.PROFANITY_FILTER_API_KEY,
   }
 }
