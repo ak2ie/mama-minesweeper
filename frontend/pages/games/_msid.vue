@@ -38,7 +38,7 @@ export default Vue.extend({
   },
   head() {
     return {
-      title: 'マインスイーパ',
+      title: 'ゲームプレイ',
     }
   },
   created() {},
