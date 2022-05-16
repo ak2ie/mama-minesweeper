@@ -419,7 +419,8 @@ export default Vue.extend({
         this.changedCardRandom = false
       }
     },
-    async more(index: number) {
+    async more(...args: any[]) {
+      const [index] = args
       await this.getImageListPerCardType(index, this.cardType[index].prefix, this.nextPageTokenItems[index].slice(-1)[0])
     },
     async getNewCard(event: any) {
