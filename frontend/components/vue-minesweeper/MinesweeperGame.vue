@@ -612,7 +612,7 @@ export default {
 
 #complete-success {
   position: absolute;
-  top: 0px;
+  top: 0;
   left: 0;
 
   img {
@@ -626,7 +626,7 @@ export default {
     top: 0;
     left: -20px;
     @media screen and (min-width: 500px) {
-      left: 0px;
+      left: 0;
     }
     width: 100%;
     height: 100%;
@@ -700,6 +700,6 @@ export default {
   width: 160px;
   font-size: 19px;
   box-shadow: 3px 4px 7px rgba(0, 0, 0, 0.15),
-    inset 0px -8px 0px rgba(0, 0, 0, 0.21);
+    inset 0 -8px 0 rgba(0, 0, 0, 0.21);
 }
 </style>
