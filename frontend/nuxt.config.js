@@ -3,15 +3,15 @@ import colors from 'vuetify/es5/util/colors'
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - ママ・マインスイーパー',
-    title: 'ママ・マインスイーパー',
+    titleTemplate: '%s - マママインスイーパー',
+    title: 'マママインスイーパー',
     htmlAttrs: {
       lang: 'ja',
     },
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' },
+      { hid: 'description', name: 'description', content: 'お互いに向き合い、話し合うきっかけを作り出して、意識のすりあわせやルール作りにつなげるためのゲームです。' },
       { name: 'format-detection', content: 'telephone=no' },
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],

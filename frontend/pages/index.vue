@@ -32,7 +32,7 @@ import Vue from 'vue'
 export default Vue.extend({
   head() {
     return {
-      title: 'トップ',
+      titleTemplate: '',
     }
   },
   async mounted() {
