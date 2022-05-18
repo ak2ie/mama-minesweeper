@@ -143,7 +143,7 @@
             height="250"
           >
             <v-carousel-item>
-              <div class="py-3" justify="center">
+              <div class="py-3 justify-center">
                 <p class="text-h5">
                   パートナーの嫌なことが地雷になっているマインスイーパーです。
                 </p>
@@ -155,7 +155,7 @@
             </v-carousel-item>
             <v-carousel-item>
               <v-sheet>
-                <div class="py-3" justify="center">
+                <div class="py-3 justify-center">
                   <p class="text-h5">
                     地雷のマスで「地雷ではない」ボタンを押してしまうと、ゲームオーバーです。
                   </p>
@@ -182,7 +182,7 @@
 
             <v-carousel-item>
               <v-sheet>
-                <div class="py-3" justify="center">
+                <div class="py-3 justify-center">
                   <p class="text-h5">
                     地雷以外のすべてのマスを開けられるように遊んでみましょう。
                   </p>
