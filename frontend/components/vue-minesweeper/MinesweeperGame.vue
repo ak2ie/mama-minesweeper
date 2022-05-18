@@ -193,7 +193,7 @@
         </v-card-text>
         <v-card-actions>
           <v-btn
-            v-show="tutorialCurrent != tutorialMax"
+            v-show="tutorialCurrent !== tutorialMax"
             text
             class="text-right"
             @click="showTutorial = false"
@@ -201,7 +201,7 @@
           >
           <v-spacer></v-spacer>
           <v-btn
-            v-show="tutorialCurrent == tutorialMax"
+            v-show="tutorialCurrent === tutorialMax"
             color="#83D2FF"
             class="text-right text-subtitle-1"
             large
