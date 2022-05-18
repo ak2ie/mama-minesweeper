@@ -46,6 +46,8 @@ export class MsService {
         isBomb,
       };
     });
+    ms.title = createMSDto.title;
+    ms.message = createMSDto.message;
     ms.createdAt = new Date();
     const newDoc = await msRepository.create(ms);
     return newDoc.id;
