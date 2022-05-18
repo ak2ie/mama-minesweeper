@@ -30,7 +30,7 @@ export default Vue.extend({
   },
   head() {
     return {
-      title: '１コマ漫画ジェネレーター',
+      title: 'カード作成',
     }
   },
   methods: {
