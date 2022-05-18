@@ -13,10 +13,19 @@
 
 ```bash
 $ cd frontend
+$ yarn install
 $ yarn dev
 ```
 
 [http://localhost:3000/](http://localhost:3000/)が表示されれば成功です。
+
+#### バックエンド
+
+```bash
+$ cd backend
+$ yarn install
+$ yarn run start:dev
+```
 
 ### デプロイ
 
