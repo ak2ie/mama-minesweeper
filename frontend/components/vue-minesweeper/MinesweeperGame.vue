@@ -13,7 +13,7 @@
       </div>
       <div class="bombcount">
         <div class="bombcount-title">
-          <img src="/images/bomb_icon.png" width="16" height="16" />
+          <img src="/images/bomb_icon.png" width="16" height="16" alt="" />
           地雷の数
         </div>
         <span class="bombcount-num">{{ bombCount }}コ</span>
@@ -35,12 +35,12 @@
 
     <!-- 完了時アニメーション -->
     <div v-if="finishedWithWin" id="complete-success">
-      <img src="/images/cracker-animated-1.gif" />
+      <img src="/images/cracker-animated-1.gif" alt="" />
     </div>
     <!-- プリロード -->
     <div v-show="finishedWithLose" id="complete-fail">
       <!-- 2回目以降もアニメーション再生 -->
-      <img :src="'/images/Bomb_300_Octree_64bit_1time.gif?' + randomText" />
+      <img :src="'/images/Bomb_300_Octree_64bit_1time.gif?' + randomText" alt="" />
     </div>
 
     <!-- リセットボタン -->
@@ -279,7 +279,7 @@ export default {
   mounted() {
     const touchEvent = window.ontouchstart;
     const touchPoints = navigator.maxTouchPoints;
-  
+
     if( touchEvent !== undefined && touchPoints > 0 ) {
       this.isTouchDevice = true
     }
