@@ -93,6 +93,9 @@ export default {
     },
     services: {
       storage: true,
+      analytics: {
+        collectionEnabled: true,
+      },
     },
   },
 
