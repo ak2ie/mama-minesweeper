@@ -17,6 +17,8 @@ jest.mock('fireorm', () => {
           return new Promise((resolve, _) => {
             const ms = new MineSweeper();
             ms.panels = [new Panel('dummy1', false), new Panel('dummy2', true)];
+            ms.title = 'ダミータイトル';
+            ms.message = 'ダミーメッセージ';
             resolve(ms);
           });
         } else if (id === 'invalidId') {
@@ -86,10 +88,11 @@ describe('取得', () => {
   });
 
   it('正常', async () => {
-    expect(await service.findOne('validId')).toEqual([
-      new Panel('dummy1', false),
-      new Panel('dummy2', true),
-    ]);
+    expect(await service.findOne('validId')).toEqual({
+      panels: [new Panel('dummy1', false), new Panel('dummy2', true)],
+      title: 'ダミータイトル',
+      message: 'ダミーメッセージ',
+    });
   });
 
   it('データなし', async () => {

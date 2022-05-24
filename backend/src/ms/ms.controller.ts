@@ -35,8 +35,8 @@ export class MsController {
   @Get(':id')
   async findOne(@Param('id') id: string) {
     try {
-      const panels = await this.msService.findOne(id);
-      return { panels };
+      const mineSweeper = await this.msService.findOne(id);
+      return mineSweeper;
     } catch (e) {
       throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
     }

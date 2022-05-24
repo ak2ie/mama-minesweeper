@@ -54,9 +54,9 @@ export class MsService {
   }
 
   /**
-   * マインスイーパの画像と地雷かどうかを返す
+   * マインスイーパの設定情報を返す
    * @param id マインスイーパID
-   * @returns マインスイーパの画像URLと地雷かどうか
+   * @returns マス、タイトル、クリアメッセージ
    */
   async findOne(id: string) {
     const msRepository = getRepository(MineSweeper);
@@ -64,6 +64,10 @@ export class MsService {
     if (ms === null) {
       throw new Error('マインスイーパが登録されていません');
     }
-    return ms.panels;
+    return {
+      panels: ms.panels,
+      title: ms.title,
+      message: ms.message,
+    };
   }
 }
