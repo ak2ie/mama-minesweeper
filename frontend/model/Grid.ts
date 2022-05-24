@@ -8,8 +8,15 @@ export class Grid {
    *
    * @param panels マス目全体
    * @param columnCount 列数
+   * @param title タイトル
+   * @param message メッセージ
    */
-  constructor(public panels: Panel[], private columnCount: number) {
+  constructor(
+    public panels: Panel[],
+    private columnCount: number,
+    public title: string,
+    public message: string
+  ) {
     if (columnCount <= 0) {
       throw new Error('列数には1以上の値を設定してください')
     } else if (columnCount > panels.length) {

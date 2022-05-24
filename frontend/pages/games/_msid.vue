@@ -9,12 +9,17 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import MinesweeperGame from '~/components/vue-minesweeper/MinesweeperGame.vue'
 
 export type DataType = {
   msid: string
   isError: boolean
 }
+
+type MethodType = {}
+type ComputedType = {}
+type PropType = {}
 
 export default Vue.extend({
   components: { MinesweeperGame },
@@ -38,9 +43,9 @@ export default Vue.extend({
   },
   head() {
     return {
-      title: 'マインスイーパ',
+      title: this.$accessor.GridManager.grid.title
     }
   },
   created() {},
-})
+} as ThisTypedComponentOptionsWithRecordProps<Vue, DataType, MethodType, ComputedType, PropType>)
 </script>
