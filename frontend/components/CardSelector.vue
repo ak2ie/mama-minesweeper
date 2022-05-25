@@ -21,7 +21,7 @@
           block
           large
           height="61"
-          @click="$emit('more')"
+          @click="$emit('more', i)"
         >
           もっと表示
         </v-btn>

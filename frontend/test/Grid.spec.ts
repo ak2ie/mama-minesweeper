@@ -5,7 +5,9 @@ describe('マス目全体', () => {
   it('列数', () => {
     const grid = new Grid(
       [new Panel('a', false), new Panel('a', false), new Panel('a', false)],
-      1
+      1,
+      'ダミータイトル',
+      'ダミーメッセージ'
     )
     expect(1).toBe(grid.ColumnCount())
   })
@@ -20,7 +22,9 @@ describe('マス目全体', () => {
         new Panel('a', false),
         new Panel('a', false),
       ],
-      2
+      2,
+      'ダミータイトル',
+      'ダミーメッセージ'
     )
     expect(3).toBe(grid.RowCount())
   })
@@ -35,7 +39,9 @@ describe('マス目全体', () => {
         new Panel('a', true),
         new Panel('a', false),
       ],
-      2
+      2,
+      'ダミータイトル',
+      'ダミーメッセージ'
     )
     expect(3).toBe(grid.BombsCount())
   })

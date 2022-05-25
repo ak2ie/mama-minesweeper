@@ -184,7 +184,7 @@ export default Vue.extend<DataType, MethodsType, ComputedType, unknown>({
   },
   head() {
     return {
-      title: '１コマ漫画ジェネレーター',
+      title: 'カード作成',
     }
   },
   watch: {

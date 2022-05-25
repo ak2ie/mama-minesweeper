@@ -108,6 +108,7 @@
     </v-dialog>
     <v-dialog
       v-model="showImageModal"
+      max-width="500px"
     >
       <v-card>
         <v-img
@@ -134,6 +135,14 @@
 
         <!-- Page Content  -->
         <div v-if="$route.query.modal == null" id="content">
+          <div>
+            <v-text-field
+              v-model="title"
+              outlined
+              color="blue-grey darken-3"
+              label="ゲームのタイトル"
+              placeholder="マママインスイーパー"></v-text-field>
+          </div>
           <div class="container">
             <cell-setting
               :cells="cells"
@@ -141,6 +150,14 @@
               @toggleBomb="toggleBomb"
               @showImage="showImage"
             />
+          </div>
+          <div>
+            <v-textarea
+              v-model="message"
+              outlined
+              color="blue-grey darken-3"
+              label="クリア後のメッセージ"
+              placeholder="いつもありがとう"></v-textarea>
           </div>
           <div class="footer">
             <div class="my-3 px-3">
@@ -250,6 +267,8 @@ interface DataType {
   snackbar: boolean,
   snackbarType: string,
   snackbarMsg: string,
+  title: string,
+  message: string,
   cardType: CardTypeData[],
 }
 
@@ -293,6 +312,8 @@ export default Vue.extend({
       snackbar: false,
       snackbarType: "success",
       snackbarMsg: "",
+      title: "私の気持ちわかっていますか？",
+      message: "私の気持ちわかっていますね！",
       cardType: [
         {
           label: 'グッタリ',
@@ -419,7 +440,8 @@ export default Vue.extend({
         this.changedCardRandom = false
       }
     },
-    async more(index: number) {
+    async more(...args: any[]) {
+      const [index] = args
       await this.getImageListPerCardType(index, this.cardType[index].prefix, this.nextPageTokenItems[index].slice(-1)[0])
     },
     async getNewCard(event: any) {
@@ -492,7 +514,11 @@ export default Vue.extend({
       this.isProcessing = true;
       this.url = undefined;
       this.errorMessage = undefined;
-      this.$axios.$post("https://asia-northeast1-mama-ms.cloudfunctions.net/api/ms/", {"panels": this.cells}).then((res:string) => {
+      this.$axios.$post("https://asia-northeast1-mama-ms.cloudfunctions.net/api/ms/", {
+        "panels": this.cells,
+        "title": this.title,
+        "message": this.message,
+      }).then((res:string) => {
         this.url = "https://mama-ms.web.app/games/" + res;
         this.isProcessing = false;
         this.share();

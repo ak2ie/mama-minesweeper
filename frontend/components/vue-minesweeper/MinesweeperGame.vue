@@ -1,5 +1,6 @@
 <template>
   <div class="minesweeper">
+    <h1>{{ title }}</h1>
     <div class="minesweeper-status">
       <div class="timer">
         <div class="timer-title">経過時間</div>
@@ -13,7 +14,7 @@
       </div>
       <div class="bombcount">
         <div class="bombcount-title">
-          <img src="/images/bomb_icon.png" width="16" height="16" />
+          <img src="/images/bomb_icon.png" width="16" height="16" alt="" />
           地雷の数
         </div>
         <span class="bombcount-num">{{ bombCount }}コ</span>
@@ -35,12 +36,12 @@
 
     <!-- 完了時アニメーション -->
     <div v-if="finishedWithWin" id="complete-success">
-      <img src="/images/cracker-animated-1.gif" />
+      <img src="/images/cracker-animated-1.gif" alt="" />
     </div>
     <!-- プリロード -->
     <div v-show="finishedWithLose" id="complete-fail">
       <!-- 2回目以降もアニメーション再生 -->
-      <img :src="'/images/Bomb_300_Octree_64bit_1time.gif?' + randomText" />
+      <img :src="'/images/Bomb_300_Octree_64bit_1time.gif?' + randomText" alt="" />
     </div>
 
     <!-- リセットボタン -->
@@ -100,8 +101,8 @@
           <span class="text-subtitle-1 pr-2">経過時間</span
           ><span class="text-h4">{{ time }}</span>
           <br />
-          <p class="text-subtitle-1">
-            {{ resultText }}
+          <p class="text-subtitle-1 share-text">
+{{ resultText }}
           </p>
           <v-btn
             color="#83D2FF"
@@ -143,7 +144,7 @@
             height="250"
           >
             <v-carousel-item>
-              <div class="py-3" justify="center">
+              <div class="py-3 justify-center">
                 <p class="text-h5">
                   パートナーの嫌なことが地雷になっているマインスイーパーです。
                 </p>
@@ -155,7 +156,7 @@
             </v-carousel-item>
             <v-carousel-item>
               <v-sheet>
-                <div class="py-3" justify="center">
+                <div class="py-3 justify-center">
                   <p class="text-h5">
                     地雷のマスで「地雷ではない」ボタンを押してしまうと、ゲームオーバーです。
                   </p>
@@ -182,7 +183,7 @@
 
             <v-carousel-item>
               <v-sheet>
-                <div class="py-3" justify="center">
+                <div class="py-3 justify-center">
                   <p class="text-h5">
                     地雷以外のすべてのマスを開けられるように遊んでみましょう。
                   </p>
@@ -193,7 +194,7 @@
         </v-card-text>
         <v-card-actions>
           <v-btn
-            v-show="tutorialCurrent != tutorialMax"
+            v-show="tutorialCurrent !== tutorialMax"
             text
             class="text-right"
             @click="showTutorial = false"
@@ -201,7 +202,7 @@
           >
           <v-spacer></v-spacer>
           <v-btn
-            v-show="tutorialCurrent == tutorialMax"
+            v-show="tutorialCurrent === tutorialMax"
             color="#83D2FF"
             class="text-right text-subtitle-1"
             large
@@ -259,7 +260,9 @@ export default {
       tutorialMax: 3,
       isInitProcessing: false,
       isTouchDevice: false,
-      isShowRemainNotBomb: false
+      isShowRemainNotBomb: false,
+      title: '',
+      creatorWinText: ''
     }
   },
   computed: {
@@ -279,7 +282,7 @@ export default {
   mounted() {
     const touchEvent = window.ontouchstart;
     const touchPoints = navigator.maxTouchPoints;
-  
+
     if( touchEvent !== undefined && touchPoints > 0 ) {
       this.isTouchDevice = true
     }
@@ -296,6 +299,8 @@ export default {
       this.bombs = this.$accessor.GridManager.grid.BombsCount()
       this.cols = this.$accessor.GridManager.grid.ColumnCount()
       this.rows = this.$accessor.GridManager.grid.RowCount()
+      this.title = this.$accessor.GridManager.grid.title
+      this.creatorWinText = this.$accessor.GridManager.grid.message
       this.isInitProcessing = true
       this.showResetButton = false
       if (this.grid.length === 0) {
@@ -521,7 +526,7 @@ export default {
       const template = `https://twitter.com/intent/tweet?text=[TEXT]&url=${window.location.href}&hashtags=マママインスイーパー`
       if (this.started) {
         if (this.won) {
-          this.resultText = 'パートナーが思っていることはだいたい分かってます！'
+          this.resultText = this.creatorWinText === '' ? 'パートナーが思っていることはだいたい分かってます！' : this.creatorWinText
           this.twitterText = template.replace(
             '[TEXT]',
             `${this.resultText}\n経過時間 ${this.time}`
@@ -534,6 +539,11 @@ export default {
             `${this.resultText}\n経過時間 ${this.time}`
           )
         }
+        // 改行を反映
+        this.twitterText = this.twitterText.replace(
+          /\n/g,
+          '%0a'
+        )
       } else {
         this.twitterText = template.replace(
           '[TEXT]',
@@ -578,7 +588,6 @@ export default {
 
   &-grid {
     user-select: none;
-    position: relative;
     overflow: auto;
     display: grid;
     grid-template-columns: repeat(9, 1fr);
@@ -604,6 +613,10 @@ export default {
     border-right: 1px #000000 solid;
     border-bottom: 1px #000000 solid;
   }
+
+  &-status {
+    position: relative;
+  }
 }
 
 .minesweeper {
@@ -612,7 +625,7 @@ export default {
 
 #complete-success {
   position: absolute;
-  top: 0px;
+  top: 0;
   left: 0;
 
   img {
@@ -626,7 +639,7 @@ export default {
     top: 0;
     left: -20px;
     @media screen and (min-width: 500px) {
-      left: 0px;
+      left: 0;
     }
     width: 100%;
     height: 100%;
@@ -637,6 +650,10 @@ export default {
   min-height: 100px;
   text-align: center;
   padding-top: 20px;
+}
+
+.share-text {
+  white-space: pre-wrap;
 }
 
 /* 経過時間 */
@@ -700,6 +717,6 @@ export default {
   width: 160px;
   font-size: 19px;
   box-shadow: 3px 4px 7px rgba(0, 0, 0, 0.15),
-    inset 0px -8px 0px rgba(0, 0, 0, 0.21);
+    inset 0 -8px 0 rgba(0, 0, 0, 0.21);
 }
 </style>

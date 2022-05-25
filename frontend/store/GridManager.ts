@@ -4,7 +4,7 @@ import { Grid } from '~/model/Grid'
 import { Panel } from '~/model/Panel'
 
 export const state = () => ({
-  grid: new Grid([new Panel('test', false)], 1),
+  grid: new Grid([new Panel('test', false)], 1, '', ''),
 })
 
 export type RootState = ReturnType<typeof state>
@@ -27,14 +27,17 @@ export const actions = actionTree(
         const response = await axios.get(
           `https://asia-northeast1-mama-ms.cloudfunctions.net/api/ms/${id}`
         )
-        const panels: Panel[] = response.data.panels
+        const mineSweeper: { panels: Panel[]; title: string; message: string } =
+          response.data
         commit(
           'initGridMutation',
           new Grid(
-            panels.map((panel) => {
+            mineSweeper.panels.map((panel) => {
               return new Panel(panel.imageUrl, panel.isBomb)
             }),
-            3 // マスの列数
+            3, // マスの列数
+            mineSweeper.title,
+            mineSweeper.message
           )
         )
       } else {
@@ -49,22 +52,6 @@ export const actions = actionTree(
           '054.png',
           '056.png',
           '057.png',
-          '101.png',
-          '107.png',
-          '114.png',
-          '120.png',
-          '124.png',
-          '131.png',
-          '137.png',
-          '139.png',
-          '159.png',
-          '60.png',
-          '61.png',
-          '62.png',
-          '66.png',
-          '67.png',
-          '70.png',
-          '72.png',
         ]
         // マス目設定
         const panels: Panel[] = []
@@ -80,7 +67,10 @@ export const actions = actionTree(
             panels[num].isBomb = true
           }
         }
-        commit('initGridMutation', new Grid(panels, 5))
+        commit(
+          'initGridMutation',
+          new Grid(panels, 3, 'マママインスイーパー', 'ありがとう')
+        )
       }
     },
   }
