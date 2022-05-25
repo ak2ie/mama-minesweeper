@@ -73,6 +73,17 @@
     <!-- <v-footer :absolute="!fixed" app>
       <span>&copy; {{ new Date().getFullYear() }}</span>
     </v-footer> -->
+    <v-footer
+      v-if="!isShowAppBar"
+      color="secondary lighten-1"
+      padless
+    >
+      <v-row justify="center" no-gutters>
+        <v-btn color="white" text class="my-2" to="/about">
+          このサイトについて
+        </v-btn>
+      </v-row>
+    </v-footer>
   </v-app>
 </template>
 
