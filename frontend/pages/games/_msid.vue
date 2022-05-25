@@ -43,7 +43,7 @@ export default Vue.extend({
   },
   head() {
     return {
-      title: this.$accessor.GridManager.grid.title
+      title: this.$accessor.GridManager.grid.title ?? 'ゲームプレイ'
     }
   },
   created() {},

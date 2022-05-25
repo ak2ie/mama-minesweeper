@@ -108,6 +108,7 @@
     </v-dialog>
     <v-dialog
       v-model="showImageModal"
+      max-width="500px"
     >
       <v-card>
         <v-img
