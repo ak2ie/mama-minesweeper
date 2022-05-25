@@ -2,6 +2,9 @@
   <div class="minesweeper">
     <h1>{{ title }}</h1>
     <div class="minesweeper-status">
+      <div class="tutorial-button">
+        <v-btn color="secondary" @click.stop="showTutorial = true">遊び方</v-btn>
+      </div>
       <div class="timer">
         <div class="timer-title">経過時間</div>
         <span class="timer-time">
@@ -197,7 +200,7 @@
             v-show="tutorialCurrent !== tutorialMax"
             text
             class="text-right"
-            @click="showTutorial = false"
+            @click="closeTutorial"
             >スキップ</v-btn
           >
           <v-spacer></v-spacer>
@@ -207,7 +210,7 @@
             class="text-right text-subtitle-1"
             large
             width="130"
-            @click="showTutorial = false"
+            @click="closeTutorial"
             >はじめる</v-btn
           >
         </v-card-actions>
@@ -217,6 +220,7 @@
 </template>
 
 <script>
+import $cookies from "cookie-universal-nuxt";
 import MinesweeperCell from './MinesweeperCell.vue'
 import MinesweeperTimer from './MinesweeperTimer.vue'
 
@@ -255,7 +259,7 @@ export default {
        */
       randomText: 'random',
       snackbar: false,
-      showTutorial: true,
+      showTutorial: false,
       tutorialCurrent: 0,
       tutorialMax: 3,
       isInitProcessing: false,
@@ -282,9 +286,13 @@ export default {
   mounted() {
     const touchEvent = window.ontouchstart;
     const touchPoints = navigator.maxTouchPoints;
+    const doneTutorial = this.$cookies.get("doneTutorial");
 
     if( touchEvent !== undefined && touchPoints > 0 ) {
       this.isTouchDevice = true
+    }
+    if(doneTutorial === undefined || !doneTutorial) {
+      this.showTutorial = true;
     }
   },
   methods: {
@@ -558,6 +566,14 @@ export default {
       this.addFlag(cell, false)
       this.dialog = false
     },
+    /**
+     * チュートリアルを閉じる
+     * クッキーに覚えさせる
+     */
+    closeTutorial() {
+      this.showTutorial = false;
+      this.$cookies.set("doneTutorial", true);
+    }
   },
   watch: {
     rows() {
@@ -654,6 +670,13 @@ export default {
 
 .share-text {
   white-space: pre-wrap;
+}
+
+/* 使い方ボタン */
+.tutorial-button {
+  position: absolute;
+  left: 20px;
+  top: 2rem;
 }
 
 /* 経過時間 */
