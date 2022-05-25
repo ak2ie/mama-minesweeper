@@ -1,5 +1,6 @@
 <template>
   <div class="minesweeper">
+    <h1>{{ title }}</h1>
     <div class="minesweeper-status">
       <div class="timer">
         <div class="timer-title">経過時間</div>
@@ -100,8 +101,8 @@
           <span class="text-subtitle-1 pr-2">経過時間</span
           ><span class="text-h4">{{ time }}</span>
           <br />
-          <p class="text-subtitle-1">
-            {{ resultText }}
+          <p class="text-subtitle-1 share-text">
+{{ resultText }}
           </p>
           <v-btn
             color="#83D2FF"
@@ -259,7 +260,9 @@ export default {
       tutorialMax: 3,
       isInitProcessing: false,
       isTouchDevice: false,
-      isShowRemainNotBomb: false
+      isShowRemainNotBomb: false,
+      title: '',
+      creatorWinText: ''
     }
   },
   computed: {
@@ -296,6 +299,8 @@ export default {
       this.bombs = this.$accessor.GridManager.grid.BombsCount()
       this.cols = this.$accessor.GridManager.grid.ColumnCount()
       this.rows = this.$accessor.GridManager.grid.RowCount()
+      this.title = this.$accessor.GridManager.grid.title
+      this.creatorWinText = this.$accessor.GridManager.grid.message
       this.isInitProcessing = true
       this.showResetButton = false
       if (this.grid.length === 0) {
@@ -521,7 +526,7 @@ export default {
       const template = `https://twitter.com/intent/tweet?text=[TEXT]&url=${window.location.href}&hashtags=マママインスイーパー`
       if (this.started) {
         if (this.won) {
-          this.resultText = 'パートナーが思っていることはだいたい分かってます！'
+          this.resultText = this.creatorWinText === '' ? 'パートナーが思っていることはだいたい分かってます！' : this.creatorWinText
           this.twitterText = template.replace(
             '[TEXT]',
             `${this.resultText}\n経過時間 ${this.time}`
@@ -534,6 +539,11 @@ export default {
             `${this.resultText}\n経過時間 ${this.time}`
           )
         }
+        // 改行を反映
+        this.twitterText = this.twitterText.replace(
+          /\n/g,
+          '%0a'
+        )
       } else {
         this.twitterText = template.replace(
           '[TEXT]',
@@ -578,7 +588,6 @@ export default {
 
   &-grid {
     user-select: none;
-    position: relative;
     overflow: auto;
     display: grid;
     grid-template-columns: repeat(9, 1fr);
@@ -603,6 +612,10 @@ export default {
   &-cell {
     border-right: 1px #000000 solid;
     border-bottom: 1px #000000 solid;
+  }
+
+  &-status {
+    position: relative;
   }
 }
 
@@ -637,6 +650,10 @@ export default {
   min-height: 100px;
   text-align: center;
   padding-top: 20px;
+}
+
+.share-text {
+  white-space: pre-wrap;
 }
 
 /* 経過時間 */
