@@ -4,6 +4,8 @@ import { Collection } from 'fireorm';
 export class MineSweeper {
   id!: string;
   panels: Array<Panel>;
+  title: string;
+  message: string;
   createdAt: Date;
 }
 
