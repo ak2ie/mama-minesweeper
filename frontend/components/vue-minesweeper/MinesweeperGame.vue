@@ -2,7 +2,7 @@
   <div class="minesweeper">
     <div class="minesweeper-status">
       <div class="tutorial-button">
-        <v-btn color="secondary" @click.stop="showTutorial = true">使い方</v-btn>
+        <v-btn color="secondary" @click.stop="showTutorial = true">遊び方</v-btn>
       </div>
       <div class="timer">
         <div class="timer-title">経過時間</div>
