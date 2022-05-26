@@ -45,7 +45,7 @@ export default {
     'nuxt-clipboard2',
   ],
 
-  ssr: false,
+  // ssr: false,
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
@@ -54,7 +54,7 @@ export default {
   },
 
   http: {
-    proxy: true
+    proxy: true,
   },
 
   proxy: {
