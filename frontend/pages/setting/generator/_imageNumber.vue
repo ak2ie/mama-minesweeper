@@ -285,9 +285,8 @@ export default Vue.extend<DataType, MethodsType, ComputedType, unknown>({
     },
     async checkNGWord(): Promise<void> {
       this.foundedNGWord = false
-      this.$axios.setHeader('Access-Control-Allow-Origin', '*')
-      const checkRes = await this.$axios.$get(`/services/rest/?method=webpurify.live.check&api_key=${this.$config.PROFANITY_FILTER_API_KEY}&text=${this.text}&lang=ja&semail=1&sphone=1&slink=1&format=json`)
-      this.foundedNGWord = checkRes.rsp.found > 0
+      const checkRes = await this.$checkNGWord(this.text)
+      this.foundedNGWord = Number(checkRes.rsp.found) > 0
     },
   },
 })
