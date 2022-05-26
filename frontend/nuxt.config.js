@@ -39,6 +39,7 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    '@nuxt/http',
     '@nuxtjs/firebase',
     'cookie-universal-nuxt',
     'nuxt-clipboard2',
@@ -49,8 +50,11 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    proxy: true,
-    prefix: 'https://api1-ap.webpurify.com',
+    baseURL: '/',
+  },
+
+  http: {
+    proxy: true
   },
 
   proxy: {
