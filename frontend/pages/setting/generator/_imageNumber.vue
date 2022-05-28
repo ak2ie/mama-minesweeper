@@ -246,7 +246,7 @@ export default Vue.extend<DataType, MethodsType, ComputedType, unknown>({
       const storageRef = this.$fire.storage.ref()
       const randomString = this.getRandomString(8)
       const now = Date.now()
-      html2canvas(this.$refs.result as HTMLElement).then((canvas) => {
+      html2canvas(this.$refs.result as HTMLElement, {scale: 1}).then((canvas) => {
         canvas.toBlob((blob) => {
           storageRef
             .child(`card${this.getZeroPad(Number(this.$route.params.imageNumber), 2)}/${now}${randomString}.png`)
