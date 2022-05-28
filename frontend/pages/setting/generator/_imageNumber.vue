@@ -249,7 +249,7 @@ export default Vue.extend<DataType, MethodsType, ComputedType, unknown>({
       html2canvas(this.$refs.result as HTMLElement, {scale: 1}).then((canvas) => {
         canvas.toBlob((blob) => {
           storageRef
-            .child(`card${this.getZeroPad(Number(this.$route.params.imageNumber), 2)}/${now}${randomString}.png`)
+            .child(`card${this.getZeroPad(Number(this.$route.params.imageNumber), 2)}/${now}${randomString}.webp`)
             .put(blob!)
             .then((snapshot: any) => {
               snapshot.ref.getDownloadURL().then((downloadURL: string) => {
@@ -259,7 +259,7 @@ export default Vue.extend<DataType, MethodsType, ComputedType, unknown>({
                 this.text = ''
               })
             })
-        }, 'image/png')
+        }, 'image/webp', 0.7)
       })
     },
     backToSetting(): void {
