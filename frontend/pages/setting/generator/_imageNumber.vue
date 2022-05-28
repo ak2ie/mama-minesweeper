@@ -17,6 +17,14 @@
       <p class="credit-text">イラスト：白目みさえ</p>
     </div>
     <div class="footer-container">
+      <v-alert v-if="foundedNGWord" type="error" class="mt-6 text-center mx-3" dismissible>
+        <p class="text-center">不適切なワードが含まれています</p>
+        <p class="text-center caption mb-0">電話番号・メールアドレスも入力できません</p>
+      </v-alert>
+      <v-alert v-if="isApiError" type="error" class="mt-6 text-center mx-3" dismissible>
+        <p class="text-center">カードを作成できません。</p>
+        <p class="text-center caption mb-0">時間をおいて試してみてください。</p>
+      </v-alert>
       <v-alert v-if="downloadURL" type="success" class="mt-6 text-center mx-3" dismissible>
         <p class="text-center">カードを保存しました！</p>
         <a :href="downloadURL" target="_blank">保存したカードを表示する</a>
@@ -62,50 +70,17 @@
           </div>
         </div>
         <div class="button-wrap mt-6 mx-auto">
-          <v-dialog
-            v-model="isOpenDialog"
-            max-width="290"
-            persistent
+          <v-btn
+            :disabled="isBlank"
+            color="#FFB9D6"
+            class="button rounded-lg"
+            block
+            large
+            height="61"
+            @click.stop="openConfirm"
           >
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                :disabled="isBlank"
-                color="#FFB9D6"
-                class="button rounded-lg"
-                block
-                large
-                v-bind="attrs"
-                height="61"
-                v-on="on"
-              >
-                カードを保存
-              </v-btn>
-            </template>
-            <v-card>
-              <v-card-title class="text-h6">
-                カードを保存してゲームに使いますか？
-              </v-card-title>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn
-                  color="blue-grey"
-                  text
-                  @click="isOpenDialog = false"
-                >
-                  キャンセル
-                </v-btn>
-                <v-btn
-                  :loading="isProcessing"
-                  :disabled="isProcessing"
-                  color="#FFB9D6"
-                  height="50"
-                  @click="uploadImage"
-                >
-                  保存
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
+            カードを保存
+          </v-btn>
         </div>
         <div v-if="$route.query.modal === 'true'" class="row justify-space-between mt-6">
           <v-btn
@@ -127,6 +102,36 @@
         </div>
       </div>
     </div>
+    <v-dialog
+      v-model="isOpenConfirm"
+      max-width="290"
+      persistent
+    >
+      <v-card>
+        <v-card-title class="text-h6">
+          カードを保存してゲームに使いますか？
+        </v-card-title>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="blue-grey"
+            text
+            @click="isOpenConfirm = false"
+          >
+            キャンセル
+          </v-btn>
+          <v-btn
+            :loading="isProcessing"
+            :disabled="isProcessing"
+            color="#FFB9D6"
+            height="50"
+            @click="uploadImage"
+          >
+            保存
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -142,7 +147,9 @@ type DataType = {
   verticalMove: number
   horizontalMove: number
   isProcessing: boolean
-  isOpenDialog: boolean
+  isOpenConfirm: boolean
+  foundedNGWord: boolean
+  isApiError: boolean
 }
 
 type MethodsType = {
@@ -156,6 +163,8 @@ type MethodsType = {
   applySetting: () => void
   getRandomString: (length: number) => string
   getZeroPad: (value: number, num: number) => string
+  openConfirm: () => void
+  checkNGWord: () => void
 }
 
 type ComputedType = {
@@ -174,7 +183,9 @@ export default Vue.extend<DataType, MethodsType, ComputedType, unknown>({
       verticalMove: 0,
       horizontalMove: 0,
       isProcessing: false,
-      isOpenDialog: false,
+      isOpenConfirm: false,
+      foundedNGWord: false,
+      isApiError: false
     }
   },
   head() {
@@ -244,7 +255,7 @@ export default Vue.extend<DataType, MethodsType, ComputedType, unknown>({
               snapshot.ref.getDownloadURL().then((downloadURL: string) => {
                 this.downloadURL = downloadURL
                 this.isProcessing = false
-                this.isOpenDialog = false
+                this.isOpenConfirm = false
                 this.text = ''
               })
             })
@@ -271,6 +282,22 @@ export default Vue.extend<DataType, MethodsType, ComputedType, unknown>({
     getZeroPad(value: number, num: number): string {
       const _num = typeof num !== 'undefined' ? num : 2
       return value.toString().padStart(_num, '0')
+    },
+    async openConfirm(): Promise<void> {
+      await this.checkNGWord()
+      if (!this.foundedNGWord && !this.isApiError) {
+        this.isOpenConfirm = true
+      }
+    },
+    async checkNGWord(): Promise<void> {
+      this.foundedNGWord = false
+      this.isApiError = false
+      try {
+        const checkRes = await this.$checkNGWord(this.text)
+        this.foundedNGWord = checkRes.data.result !== 'OK'
+      } catch(e) {
+        this.isApiError = true
+      }
     },
   },
 })
