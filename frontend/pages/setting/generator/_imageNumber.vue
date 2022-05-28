@@ -5,7 +5,7 @@
       <div
         :key="`move${String(verticalMove + horizontalMove)}`"
         class="manga-text-outer"
-        :style="imageFileName === '08.png' ? styleObjectLeft : styleObjectRight"
+        :style="imageFileName === '08.webp' ? styleObjectLeft : styleObjectRight"
       >
         <div v-if="text" class="manga-text">
           <div v-for="(item, i) in textHtmlItems" :key="`html-${i}`" class="substr-letter">
@@ -239,7 +239,7 @@ export default Vue.extend<DataType, MethodsType, ComputedType, unknown>({
       this.horizontalMove -= 5
     },
     getImage(): void {
-      this.imageFileName = `${this.getZeroPad(Number(this.$route.params.imageNumber), 2)}.png` || '01.png'
+      this.imageFileName = `${this.getZeroPad(Number(this.$route.params.imageNumber), 2)}.webp` || '01.webp'
     },
     uploadImage(): void {
       this.isProcessing = true
@@ -249,7 +249,7 @@ export default Vue.extend<DataType, MethodsType, ComputedType, unknown>({
       html2canvas(this.$refs.result as HTMLElement, {scale: 1}).then((canvas) => {
         canvas.toBlob((blob) => {
           storageRef
-            .child(`card${this.getZeroPad(Number(this.$route.params.imageNumber), 2)}/${now}${randomString}.png`)
+            .child(`card${this.getZeroPad(Number(this.$route.params.imageNumber), 2)}/${now}${randomString}.webp`)
             .put(blob!)
             .then((snapshot: any) => {
               snapshot.ref.getDownloadURL().then((downloadURL: string) => {
@@ -259,7 +259,7 @@ export default Vue.extend<DataType, MethodsType, ComputedType, unknown>({
                 this.text = ''
               })
             })
-        }, 'image/png')
+        }, 'image/webp', 0.7)
       })
     },
     backToSetting(): void {

@@ -3,7 +3,7 @@
     <ul class="manga-list">
       <li v-for="i in fileLength" :key="i" class="manga-item">
         <nuxt-link :to="{ path: `/setting/generator/${i}`, query: { modal: $route.query.modal } }">
-          <img :src="`/images/manga/${getZeroPad(i, 2)}.png`" alt="" />
+          <img :src="`/images/manga/${getZeroPad(i, 2)}.webp`" alt="" />
         </nuxt-link>
       </li>
     </ul>
