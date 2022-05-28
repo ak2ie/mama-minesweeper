@@ -16,7 +16,12 @@ declare module '@nuxt/types' {
 }
 
 const myPlugin: Plugin = (context, inject) => {
-  inject('checkNGWord', (text: string|null) => context.app.$http.$get(`/services/rest/?method=webpurify.live.check&api_key=${context.$config.PROFANITY_FILTER_API_KEY}&text=${text}&lang=ja&semail=1&sphone=1&slink=1&format=json`))
+  inject('checkNGWord', (text: string | null) =>
+    context.app.$axios.post(
+      'https://asia-northeast1-mama-ms.cloudfunctions.net/api/cards',
+      { text }
+    )
+  )
 }
 
 export default myPlugin

@@ -21,6 +21,10 @@
         <p class="text-center">不適切なワードが含まれています</p>
         <p class="text-center caption mb-0">電話番号・メールアドレスも入力できません</p>
       </v-alert>
+      <v-alert v-if="isApiError" type="error" class="mt-6 text-center mx-3" dismissible>
+        <p class="text-center">カードを作成できません。</p>
+        <p class="text-center caption mb-0">時間をおいて試してみてください。</p>
+      </v-alert>
       <v-alert v-if="downloadURL" type="success" class="mt-6 text-center mx-3" dismissible>
         <p class="text-center">カードを保存しました！</p>
         <a :href="downloadURL" target="_blank">保存したカードを表示する</a>
@@ -145,6 +149,7 @@ type DataType = {
   isProcessing: boolean
   isOpenConfirm: boolean
   foundedNGWord: boolean
+  isApiError: boolean
 }
 
 type MethodsType = {
@@ -180,6 +185,7 @@ export default Vue.extend<DataType, MethodsType, ComputedType, unknown>({
       isProcessing: false,
       isOpenConfirm: false,
       foundedNGWord: false,
+      isApiError: false
     }
   },
   head() {
@@ -279,14 +285,19 @@ export default Vue.extend<DataType, MethodsType, ComputedType, unknown>({
     },
     async openConfirm(): Promise<void> {
       await this.checkNGWord()
-      if (!this.foundedNGWord) {
+      if (!this.foundedNGWord && !this.isApiError) {
         this.isOpenConfirm = true
       }
     },
     async checkNGWord(): Promise<void> {
       this.foundedNGWord = false
-      const checkRes = await this.$checkNGWord(this.text)
-      this.foundedNGWord = Number(checkRes.rsp.found) > 0
+      this.isApiError = false
+      try {
+        const checkRes = await this.$checkNGWord(this.text)
+        this.foundedNGWord = checkRes.data.result !== 'OK'
+      } catch(e) {
+        this.isApiError = true
+      }
     },
   },
 })
