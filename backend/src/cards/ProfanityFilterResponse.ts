@@ -1,12 +1,4 @@
-export type ProfanityFilterBaseResponse = {
-  rsp: {
-    '@attributes': {
-      stat: string;
-    };
-  };
-};
-
-export type ProfanityFilterSuccessResponse = ProfanityFilterBaseResponse & {
+export type ProfanityFilterSuccessResponse = {
   rsp: {
     '@attributes': {
       stat: 'ok';
@@ -17,22 +9,3 @@ export type ProfanityFilterSuccessResponse = ProfanityFilterBaseResponse & {
     api_key: string;
   };
 };
-
-export type ProfanityFilterErrorResponse = ProfanityFilterBaseResponse & {
-  rsp: {
-    '@attributes': {
-      stat: 'fail';
-    };
-    err: {
-      '@attributes': {
-        code: string;
-        msg: string;
-      };
-    };
-    text: string;
-  };
-};
-
-export type ProfanityFilterResponse =
-  | ProfanityFilterSuccessResponse
-  | ProfanityFilterErrorResponse;
