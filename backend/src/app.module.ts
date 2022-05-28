@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MsModule } from './ms/ms.module';
 import { LoggerModule } from 'nestjs-pino';
+import { CardsModule } from './cards/cards.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { LoggerModule } from 'nestjs-pino';
             }
           : {},
     }),
+    CardsModule,
   ],
   controllers: [],
   providers: [],
