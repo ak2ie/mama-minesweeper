@@ -25,7 +25,6 @@ jobs:
           echo "MESSAGING_SENDER_ID=${{ secrets.MESSAGING_SENDER_ID }}" >> frontend/.env
           echo "APP_ID=${{ secrets.APP_ID }}" >> frontend/.env
           echo "TRY_GAME_ID=UU5ltBSJZhbJwoCKT25x" >> frontend/.env
-          echo "PROFANITY_FILTER_API_KEY=${{ secrets.PROFANITY_FILTER_API_KEY }}" >> frontend/.env
       - run: cd frontend && yarn install && yarn run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
