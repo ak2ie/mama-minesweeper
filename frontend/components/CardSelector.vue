@@ -89,5 +89,8 @@ export default Vue.extend({
     border: 3px solid rebeccapurple;
     background-color: #fff;
   }
+  img {
+    width: 100%;
+  }
 }
 </style>
