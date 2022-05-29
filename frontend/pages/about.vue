@@ -7,6 +7,12 @@
     </v-row>
     <v-row justify="center">
       <v-col cols="12" sm="8" md="6">
+        <h3>公開について</h3>
+        <p>このプロジェクトは2022年3月17日の「オンラインアイデアソン」からスタートしました。アプリの公開は2022年6月25日に終了する予定です。</p>
+      </v-col>
+    </v-row>
+    <v-row justify="center">
+      <v-col cols="12" sm="8" md="6">
         <h3>イラストについて</h3>
         一コマ漫画のイラストは白目みさえ様からご提供いただいています。
         <div class="text-center my-4">
