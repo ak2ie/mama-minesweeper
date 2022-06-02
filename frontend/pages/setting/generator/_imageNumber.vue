@@ -311,7 +311,6 @@ $first-letter-circle: calc(50px + 35 * (100vw - 360px) / 580);
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 30vh;
 }
 .manga-container {
   position: relative;
@@ -320,9 +319,6 @@ $first-letter-circle: calc(50px + 35 * (100vw - 360px) / 580);
 }
 .footer-container {
   width: 100%;
-  position: fixed;
-  bottom: 0;
-  left: 0;
 }
 .actions-container {
   background-color: #FFFFFF;
