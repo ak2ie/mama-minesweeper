@@ -104,11 +104,12 @@
     </div>
     <v-dialog
       v-model="isOpenConfirm"
-      max-width="290"
+      max-width="600"
       persistent
     >
       <v-card>
         <v-card-title class="text-h6">
+          <div ref="cardPreviewCanvas" />
           カードを保存してゲームに使いますか？
         </v-card-title>
         <v-card-actions>
@@ -150,6 +151,7 @@ type DataType = {
   isOpenConfirm: boolean
   foundedNGWord: boolean
   isApiError: boolean
+  oldCanvas: Node|null
 }
 
 type MethodsType = {
@@ -185,7 +187,8 @@ export default Vue.extend<DataType, MethodsType, ComputedType, unknown>({
       isProcessing: false,
       isOpenConfirm: false,
       foundedNGWord: false,
-      isApiError: false
+      isApiError: false,
+      oldCanvas: null,
     }
   },
   head() {
@@ -287,6 +290,17 @@ export default Vue.extend<DataType, MethodsType, ComputedType, unknown>({
       await this.checkNGWord()
       if (!this.foundedNGWord && !this.isApiError) {
         this.isOpenConfirm = true
+        html2canvas(this.$refs.result as HTMLElement).then((canvas) => {
+          const $cardPreviewCanvas = this.$refs.cardPreviewCanvas as HTMLElement
+          if (!this.oldCanvas) {
+            $cardPreviewCanvas.appendChild(canvas)
+          } else {
+            $cardPreviewCanvas.replaceChild(canvas, this.oldCanvas)
+          }
+          canvas.style.width = '100%'
+          canvas.style.height = 'auto'
+          this.oldCanvas = canvas
+        })
       }
     },
     async checkNGWord(): Promise<void> {
