@@ -5,7 +5,7 @@
       <div
         :key="`move${String(verticalMove + horizontalMove)}`"
         class="manga-text-outer"
-        :style="imageFileName === '08.webp' ? styleObjectLeft : styleObjectRight"
+        :style="(imageFileName === '08.webp' | imageFileName === '09.webp') ? styleObjectLeft : styleObjectRight"
       >
         <div v-if="text" class="manga-text">
           <div v-for="(item, i) in textHtmlItems" :key="`html-${i}`" class="substr-letter">
@@ -110,7 +110,8 @@
       <v-card>
         <v-card-title class="text-h6">
           <div ref="cardPreviewCanvas" />
-          カードを保存してゲームに使いますか？
+          <div v-if="$route.params.imageNumber != 9">カードを保存してゲームに使いますか？</div>
+          <div v-if="$route.params.imageNumber == 9">カードを保存して感謝の言葉を送りますか？</div>
         </v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
