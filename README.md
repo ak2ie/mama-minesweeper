@@ -32,3 +32,4 @@ $ yarn run start:dev
 ```bash
 $ firebase deploy
 ```
+感謝カードを作る機能を追加
