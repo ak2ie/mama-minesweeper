@@ -10,6 +10,11 @@
     </v-row>
     <v-row justify="center">
       <v-col cols="12" sm="8" md="6">
+        <v-btn block x-large color="#FFB9D6" class="button rounded-lg" height="77" :to="{ path: '/setting/generator/9', query: { modal: false } }"><v-icon>mdi-hands-pray</v-icon>感謝カードを作る</v-btn>
+      </v-col>
+    </v-row>
+    <v-row justify="center">
+      <v-col cols="12" sm="8" md="6">
         <v-btn block x-large color="#83D2FF" class="button rounded-lg" height="77" @click="startGame">ためす</v-btn>
       </v-col>
     </v-row>
